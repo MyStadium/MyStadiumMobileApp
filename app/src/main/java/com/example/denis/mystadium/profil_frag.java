@@ -1,6 +1,5 @@
 package com.example.denis.mystadium;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -21,7 +20,7 @@ public class profil_frag extends android.support.v4.app.Fragment{
     private TextView txt;
     private EditText editText;
     Utilisateur user;
-    HttpRequest requestmanager;
+    HttpRequestUser requestmanager;
 
     @Nullable
     @Override
@@ -37,7 +36,7 @@ public class profil_frag extends android.support.v4.app.Fragment{
             public void onClick(View v)
             {
 
-                user = new HttpRequest().doInBackground(editText.getText().toString());
+                user = new HttpRequestUser().doInBackground(editText.getText().toString());
                 if(user != null) {
                     txt.setText("Nom:" + user.getNom() + " Prenom: " +user.getPrenom());
                 }else{

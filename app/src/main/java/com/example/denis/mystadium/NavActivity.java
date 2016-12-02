@@ -1,9 +1,11 @@
 package com.example.denis.mystadium;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.v4.app.FragmentManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,22 +13,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class NavActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Toast.makeText(this, "HELLO 2", Toast.LENGTH_LONG);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -34,8 +31,17 @@ public class NavActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        //Choose the frag to put on the screen at the beginning of the app, depending on if the user is alredy connected or not
         FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.content_nav, new connection_frag()).commit();
+
+        Fragment startingFragment;
+        SharedPreferences shared = getPreferences(MODE_PRIVATE);
+        if(shared.getString("connectedUserName", "").equals("") || shared.getString("connectedUserName", "") == null){
+            startingFragment = new connection_frag();
+        }else{
+            startingFragment = new disconnect_frag();
+        }
+        manager.beginTransaction().replace(R.id.content_nav, startingFragment).commit();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -88,7 +94,12 @@ public class NavActivity extends AppCompatActivity
 
 
         if (id == R.id.nav_con) {
-            myFrag = new connection_frag();
+            SharedPreferences pref = getPreferences(MODE_PRIVATE);
+            if(pref.getString("connectedUserName", "").equals("") || pref.getString("connectedUserName", "") == null){
+                myFrag = new connection_frag();
+            }else{
+                myFrag = new disconnect_frag();
+            }
         } else if (id == R.id.nav_che) {
             myFrag = new chercherMatch_frag();
         } else if (id == R.id.nav_pro) {
