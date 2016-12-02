@@ -27,6 +27,7 @@ public class chercherMatch_frag extends android.support.v4.app.Fragment{
         btn = (Button) myView.findViewById(R.id.button);
         match = (TextView) myView.findViewById(R.id.match);
         match.setText("SALUT");
+        System.out.println("toz");
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
