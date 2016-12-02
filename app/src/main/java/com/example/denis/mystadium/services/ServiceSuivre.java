@@ -12,11 +12,11 @@ import java.util.Map;
 public class ServiceSuivre {
     private RequestManager manager;
 
-    public ServiceSuivre (RequestManager manager) {
-        this.manager = manager;
+    public ServiceSuivre () {
+        this.manager = new RequestManager();
     }
     public void postRequest(String url, Suivre sui){
-        this.manager.postRequest(url,sui);
+        //this.manager.postRequest(url,sui);
     }
     public void deleteRequest(String url,Map<String,String> params){
         this.manager.deleteRequest(url,params);

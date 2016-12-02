@@ -1,9 +1,12 @@
 package com.example.denis.mystadium.models;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 /**
  * Created by Utilisateur on 02-12-16.
  */
 
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class Favoris {
     private int idUtilisateur;
     private int idEquipe;

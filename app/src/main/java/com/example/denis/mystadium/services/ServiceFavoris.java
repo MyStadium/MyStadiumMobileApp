@@ -12,8 +12,8 @@ import java.util.Map;
 public class ServiceFavoris {
     private RequestManager manager;
 
-    public ServiceFavoris(RequestManager manager) {
-        this.manager = manager;
+    public ServiceFavoris() {
+        this.manager = new RequestManager();
     }
     public void postRequest(String url, Favoris fav){
         this.manager.postRequest(url,fav);
