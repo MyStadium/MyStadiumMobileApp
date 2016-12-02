@@ -3,6 +3,8 @@ package com.example.denis.mystadium;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.denis.mystadium.Model.Utilisateur;
+
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;

@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.denis.mystadium.Model.Utilisateur;
+
 /**
  * Created by denis on 30-11-16.
  */

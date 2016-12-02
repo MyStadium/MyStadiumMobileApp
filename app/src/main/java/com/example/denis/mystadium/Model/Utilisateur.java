@@ -1,4 +1,4 @@
-package com.example.denis.mystadium;
+package com.example.denis.mystadium.Model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

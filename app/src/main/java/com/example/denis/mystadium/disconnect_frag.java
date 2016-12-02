@@ -48,6 +48,7 @@ public class disconnect_frag extends Fragment {
         SharedPreferences.Editor editor = shared.edit();
         editor.putString("connectedUserName", "");
         editor.putString("connectedUserForname", "");
+        editor.putInt("connectedUserId", 0);
         editor.commit();
         txtConnected.setText("Aucun utilisateur connecté");
 
