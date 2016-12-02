@@ -1,6 +1,5 @@
 package com.example.denis.mystadium;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.denis.mystadium.Model.Utilisateur;
 
 /**
  * Created by denis on 30-11-16.
@@ -55,6 +56,7 @@ public class connection_frag extends android.support.v4.app.Fragment{
             SharedPreferences.Editor editor = pref.edit();
             editor.putString("connectedUserName", user.getNom());
             editor.putString("connectedUserForname", user.getPrenom());
+            editor.putInt("connectedUserId", user.getId());
             editor.commit();
             txtConnection.setText("Connecté en tant que:"+pref.getString("connectedUserName", "") + " " +pref.getString("connectedUserForname", ""));
 
