@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class NavActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -92,22 +93,41 @@ public class NavActivity extends AppCompatActivity
 
         android.support.v4.app.Fragment myFrag = null;
 
+        boolean connected = false;
+        SharedPreferences pref = getPreferences(MODE_PRIVATE);
+        if(pref.getString("connectedUserName", "")!= null && !pref.getString("connectedUserName", "").equals("")){
+            connected = true;
+        }
 
         if (id == R.id.nav_con) {
-            SharedPreferences pref = getPreferences(MODE_PRIVATE);
-            if(pref.getString("connectedUserName", "").equals("") || pref.getString("connectedUserName", "") == null){
-                myFrag = new connection_frag();
-            }else{
+            if(connected){
                 myFrag = new disconnect_frag();
+            }else{
+                myFrag = new connection_frag();
             }
         } else if (id == R.id.nav_che) {
             myFrag = new chercherMatch_frag();
         } else if (id == R.id.nav_pro) {
-            myFrag = new profil_frag();
+            if(connected){
+                myFrag = new profil_frag();
+            }else{
+                myFrag = new connection_frag();
+                Toast.makeText(getApplicationContext(), "Vous devez être connecté pour afficher votre profil", Toast.LENGTH_LONG).show();
+            }
         } else if (id == R.id.nav_equ) {
-            myFrag = new equipes_frag();
+            if(connected){
+                myFrag = new equipes_frag();
+            }else{
+                myFrag = new connection_frag();
+                Toast.makeText(getApplicationContext(), "Vous devez être connecté pour afficher votre profil", Toast.LENGTH_LONG).show();
+            }
         } else if (id == R.id.nav_jou) {
-            myFrag = new joueurs_frag();
+            if(connected){
+                myFrag = new joueurs_frag();
+            }else{
+                myFrag = new connection_frag();
+                Toast.makeText(getApplicationContext(), "Vous devez être connecté pour afficher votre profil", Toast.LENGTH_LONG).show();
+            }
         }
 
         FragmentManager manager = getSupportFragmentManager();
@@ -116,5 +136,6 @@ public class NavActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
 }
