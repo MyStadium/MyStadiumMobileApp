@@ -48,11 +48,15 @@ public class GPSTracker extends Service implements LocationListener {
     private Location getLocation() {
         try {
             locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
-            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-              if(location != null){
-                      latitude = location.getLatitude();
-                      longitude = location.getLongitude();
-              }
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if(location != null){
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+                }
+
+            }
+
 
         }catch(Exception e){
             e.printStackTrace();
