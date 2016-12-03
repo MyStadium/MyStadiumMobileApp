@@ -71,6 +71,9 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
                 .setPositiveButton("Ne plus suivre", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferences pref = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+                        requestManager.deleteFav(pref.getInt("connectedUserId", 0), favPlayersList.get(pos).getId());
                         favPlayersList.remove(pos);
                         adaptater.notifyDataSetChanged();
                         Toast.makeText(getActivity().getApplicationContext(), "Vous ne suivez plus ce joueur", Toast.LENGTH_LONG).show();

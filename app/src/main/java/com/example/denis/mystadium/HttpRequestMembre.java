@@ -40,6 +40,20 @@ public class HttpRequestMembre extends AsyncTask<Integer, Void, Membre>{
         }
     }
 
+    public void deleteFav(int idUtilisateur, int idMembre){
+        try {
+            final String url = "http://192.168.128.13:8081/MyStadium-REST-DEVILLE-BRONSART/resources/suivre/idUtilisateur/"+idUtilisateur+"/idMembre/"+idMembre;
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+
+            restTemplate.delete(url);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("MainActivity", e.getMessage(), e);
+        }
+    }
+
 
     @Override
     protected Membre doInBackground(Integer... params) {
