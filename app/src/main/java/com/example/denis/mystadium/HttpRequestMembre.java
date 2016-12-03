@@ -40,6 +40,24 @@ public class HttpRequestMembre extends AsyncTask<Integer, Void, Membre>{
         }
     }
 
+    public List<InfoMembre> getMembreFromSearch (String... params) {
+        try {
+            final String url = "http://192.168.128.13:8081/MyStadium-REST-DEVILLE-BRONSART/resources/membre/search/"+params[0];
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+
+
+            ResponseEntity<InfoMembre[]> responseEntity = restTemplate.getForEntity(url, InfoMembre[].class);
+            List<InfoMembre> liste = new ArrayList<InfoMembre>(Arrays.asList( responseEntity.getBody()));
+            return liste;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("MainActivity", e.getMessage(), e);
+            return null;
+        }
+    }
+
     public void deleteFav(int idUtilisateur, int idMembre){
         try {
             final String url = "http://192.168.128.13:8081/MyStadium-REST-DEVILLE-BRONSART/resources/suivre/idUtilisateur/"+idUtilisateur+"/idMembre/"+idMembre;

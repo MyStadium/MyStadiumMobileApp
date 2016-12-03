@@ -3,17 +3,20 @@ package com.example.denis.mystadium;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.ListViewAutoScrollHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -30,7 +33,8 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
     private View myView;
     private ListView playersList;
     private HttpRequestMembre requestManager;
-    ArrayAdapter<InfoMembre> adaptater;
+    private ArrayAdapter<InfoMembre> adaptater;
+    private Button btnAdd;
 
 
 
@@ -40,8 +44,14 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
         myView = inflater.inflate(R.layout.joueurs, container, false);
         requestManager = new HttpRequestMembre();
         playersList = (ListView) myView.findViewById(R.id.playersList);
+        btnAdd = (Button)myView.findViewById(R.id.btnAdd);
 
-
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnAddClicked();
+            }
+        });
 
         SharedPreferences pref = this.getActivity().getPreferences(Context.MODE_PRIVATE);
         final List<InfoMembre> favPlayersList= requestManager.getFavPlayersList(pref.getInt("connectedUserId", 0));
@@ -52,8 +62,6 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
                return buildDialog(favPlayersList, pos);
             }
         });
-
-
 
         adaptater = new ArrayAdapter<InfoMembre>(this.getContext(), android.R.layout.simple_list_item_1, favPlayersList);
         playersList.setAdapter(adaptater);
@@ -82,5 +90,10 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
 
         builder.show();
         return true;
+    }
+
+    private void btnAddClicked(){
+        Intent intent = new Intent(super.getContext(), SearchActivity.class);
+        startActivity(intent);
     }
 }
