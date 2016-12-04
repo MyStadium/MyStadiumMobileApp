@@ -52,7 +52,7 @@ public class SearchActivity extends AppCompatActivity {
 
     public void btnSearchClicked(){
         listFromRest= requestManager.getMembreFromSearch(txtSearch.getText().toString());
-        adaptater = new ArrayAdapter<InfoMembre>(getApplicationContext(), android.R.layout.simple_list_item_1, listFromRest);
+        adaptater = new ArrayAdapter<InfoMembre>(this, android.R.layout.simple_list_item_1, listFromRest);
         searchList.setAdapter(adaptater);
     }
 }
