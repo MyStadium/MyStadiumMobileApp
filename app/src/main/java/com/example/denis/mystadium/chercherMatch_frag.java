@@ -3,8 +3,10 @@ package com.example.denis.mystadium;
 
 
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,7 +50,7 @@ public class chercherMatch_frag extends android.support.v4.app.Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         myView = inflater.inflate(R.layout.cherchermatch, container, false);
-        gps = new GPSTracker(getContext());
+        gps = new GPSTracker(this.getActivity().getApplicationContext());
         btnRecherche = (Button) myView.findViewById(R.id.btnRecherche);
         btnDejaSurPlace = (Button) myView.findViewById(R.id.btnLocaliserMatchProche);
         datePickerDebut = (DatePicker) myView.findViewById(R.id.datePickerDebut);
@@ -58,53 +60,40 @@ public class chercherMatch_frag extends android.support.v4.app.Fragment{
 
             @Override
             public void onClick(View v) {
-                try {
-                    Date date = new Date();
-                    String dateDebut = new SimpleDateFormat("yyyy-MM-dd").format(date);
-                    Date dayAfter = new Date(date.getTime() + TimeUnit.DAYS.toMillis(1));
-                    String dateFin = new SimpleDateFormat("yyyy-MM-dd").format(dayAfter); ;
-                    String nbKilometreString = "0.5";
-                    double latitude = gps.getLatitude();
-                    double longitude = gps.getLongitude();
-                    String url = "http://192.168.128.13:8081/MyStadium-REST-DEVILLE-BRONSART/resources/rencontre/find/"+dateDebut+"/"+dateFin+"/"+nbKilometreString+"/"+latitude+"/"+longitude;
-                    RestTemplate restTemplate = new RestTemplate();
-                    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                    restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+
+                    if( gps.canGetLocation() ) {
+                        double latitude = gps.getLatitude();
+                        double longitude = gps.getLongitude();
+                            Intent i = new Intent(getActivity(), ResultRechercheMatch.class);
+                            i.putExtra("latitude", latitude);
+                            i.putExtra("longitude", longitude);
+                            startActivity(i);
 
 
-                    ResponseEntity<InfoRencontre[]> responseEntity = restTemplate.getForEntity(url, InfoRencontre[].class);
-                    List<InfoRencontre> liste = new ArrayList<InfoRencontre>(Arrays.asList( responseEntity.getBody()));
+                    }else{
+                        gps.showSettingAlert();
+                    }
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e("MainActivity", e.getMessage(), e);
-
-                }
             }
         });
         btnRecherche.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                try {
+
                     String dateDebut = datePickerDebut.toString();
                     String dateFin = datePickerFin.toString();
                     String nbKilometreString = nbKilometre.toString();
                     double latitude = gps.getLatitude();
                     double longitude = gps.getLongitude();
-                    String url = "http://192.168.128.13:8081/MyStadium-REST-DEVILLE-BRONSART/resources/rencontre/find/"+dateDebut+"/"+dateFin+"/"+nbKilometreString+"/"+latitude+"/"+longitude;
-                    RestTemplate restTemplate = new RestTemplate();
-                    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                    restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+                    Intent i = new Intent(getActivity(),ResultRechercheMatch.class);
+                    i.putExtra("latitude",latitude);
+                    i.putExtra("longitude",longitude);
+                    i.putExtra("dateDebut",dateDebut);
+                    i.putExtra("dateFin",dateFin);
+                    i.putExtra("nbKilometre",nbKilometreString);
+                    startActivity(i);
 
 
-                    ResponseEntity<InfoRencontre[]> responseEntity = restTemplate.getForEntity(url, InfoRencontre[].class);
-                    List<InfoRencontre> liste = new ArrayList<InfoRencontre>(Arrays.asList( responseEntity.getBody()));
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e("MainActivity", e.getMessage(), e);
-
-                }
             }
         });
         return myView;
