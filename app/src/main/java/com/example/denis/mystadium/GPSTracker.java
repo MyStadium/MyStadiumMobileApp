@@ -26,8 +26,6 @@ public class GPSTracker extends Service implements LocationListener {
 
     private final Context context;
 
-    boolean isGPSEnabled = false;
-    boolean isNetworkEnabled = false;
     boolean canGetLocation = true;
 
     Location location;
@@ -45,10 +43,14 @@ public class GPSTracker extends Service implements LocationListener {
         location = getLocation();
     }
 
-    private Location getLocation() {
+    public Location getLocation() {
         try {
             locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
-            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            }else {
+                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            }
               if(location != null){
                       latitude = location.getLatitude();
                       longitude = location.getLongitude();
@@ -77,8 +79,10 @@ public class GPSTracker extends Service implements LocationListener {
     }
 
     public boolean canGetlocation(){
+
         return this.canGetLocation;
     }
+
 
     public void showSettingAlert(){
 
@@ -107,6 +111,7 @@ public class GPSTracker extends Service implements LocationListener {
 
     @Override
     public void onProviderDisabled(String provider) {
-
+        Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivity(i);
     }
 }
