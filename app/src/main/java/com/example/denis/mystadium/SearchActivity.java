@@ -1,8 +1,11 @@
 package com.example.denis.mystadium;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.icu.text.IDNA;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +19,7 @@ import android.widget.Toast;
 
 
 import com.example.denis.mystadium.Model.InfoMembre;
+import com.example.denis.mystadium.Model.Suivre;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +33,7 @@ public class SearchActivity extends AppCompatActivity {
     private HttpRequestMembre requestManager;
     private ArrayAdapter<InfoMembre> adaptater;
     private  List<InfoMembre> listFromRest;
+    private InfoMembre selectedMember;
 
     private List<InfoMembre> listeSuivis;
 
@@ -51,9 +56,17 @@ public class SearchActivity extends AppCompatActivity {
                 btnSearchClicked();
             }
         });
+        btnAddSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnAddSearchClicked();
+            }
+        });
         searchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedMember = adaptater.getItem(position);
+                Toast.makeText(getApplicationContext(), "Sélectionné: "+adaptater.getItem(position).getNom() +" "+adaptater.getItem(position).getPrenom(), Toast.LENGTH_SHORT).show();
                 searchList.setItemChecked(position, true);
                 view.setBackgroundColor(Color.CYAN);
                 adaptater.notifyDataSetChanged();
@@ -67,5 +80,16 @@ public class SearchActivity extends AppCompatActivity {
         listFromRest= requestManager.getMembreFromSearch(txtSearch.getText().toString());
         adaptater = new ArrayAdapter<InfoMembre>(this, android.R.layout.simple_list_item_activated_1, listFromRest);
         searchList.setAdapter(adaptater);
+    }
+
+    public void btnAddSearchClicked(){
+        if(selectedMember != null){
+            SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
+            int idUtilisateur = shared.getInt("connectedUserId", 0);
+            Suivre suivi = new Suivre(selectedMember.getId(), idUtilisateur);
+            requestManager.addFav(suivi);
+        }else{
+            Toast.makeText(this, "Aucun membre selectionné", Toast.LENGTH_SHORT).show();
+        }
     }
 }

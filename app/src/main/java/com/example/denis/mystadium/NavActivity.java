@@ -3,6 +3,7 @@ package com.example.denis.mystadium;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -36,7 +37,7 @@ public class NavActivity extends AppCompatActivity
         FragmentManager manager = getSupportFragmentManager();
 
         Fragment startingFragment;
-        SharedPreferences shared = getPreferences(MODE_PRIVATE);
+        SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
         if(shared.getString("connectedUserName", "").equals("") || shared.getString("connectedUserName", "") == null){
             startingFragment = new connection_frag();
         }else{
@@ -94,7 +95,7 @@ public class NavActivity extends AppCompatActivity
         android.support.v4.app.Fragment myFrag = null;
 
         boolean connected = false;
-        SharedPreferences pref = getPreferences(MODE_PRIVATE);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         if(pref.getString("connectedUserName", "")!= null && !pref.getString("connectedUserName", "").equals("")){
             connected = true;
         }

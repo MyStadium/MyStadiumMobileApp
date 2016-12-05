@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.ListViewAutoScrollHelper;
 import android.support.v7.widget.RecyclerView;
@@ -55,7 +56,7 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
             }
         });
 
-        SharedPreferences pref = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this.getContext());
         favPlayersList= requestManager.getFavPlayersList(pref.getInt("connectedUserId", 0));
 
         playersList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

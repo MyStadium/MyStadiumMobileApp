@@ -5,7 +5,12 @@ import android.util.Log;
 
 import com.example.denis.mystadium.Model.InfoMembre;
 import com.example.denis.mystadium.Model.Membre;
+import com.example.denis.mystadium.Model.Suivre;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -66,6 +71,30 @@ public class HttpRequestMembre extends AsyncTask<Integer, Void, Membre>{
             restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
             restTemplate.delete(url);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("MainActivity", e.getMessage(), e);
+        }
+    }
+
+    public void addFav(Suivre s){
+        try {
+            final String url = "http://192.168.128.13:8081/MyStadium-REST-DEVILLE-BRONSART/resources/suivre";
+            /*RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+
+            restTemplate.postForEntity(url, s, Suivre.class);*/
+
+
+            /*RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+            HttpEntity<Suivre> entity = new HttpEntity<Suivre>(s, headers);
+            restTemplate.exchange(url, HttpMethod.POST, entity, Suivre.class);*/
+
+
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("MainActivity", e.getMessage(), e);

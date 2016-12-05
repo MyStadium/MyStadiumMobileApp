@@ -3,6 +3,7 @@ package com.example.denis.mystadium;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.denis.mystadium.Model.Utilisateur;
 
@@ -22,7 +24,6 @@ public class connection_frag extends android.support.v4.app.Fragment{
     private View myView;
     private EditText txtLogin;
     private EditText txtPass;
-    private TextView txtConnection;
     private Button btnConnection;
     private Utilisateur user = null;
     private HttpRequestUser requestUser;
@@ -36,7 +37,6 @@ public class connection_frag extends android.support.v4.app.Fragment{
         requestUser = new HttpRequestUser();
         txtLogin = (EditText) myView.findViewById(R.id.txtLogin);
         txtPass = (EditText) myView.findViewById(R.id.txtPass);
-        txtConnection = (TextView) myView.findViewById(R.id.txtConnection);
         btnConnection = (Button) myView.findViewById(R.id.btnConnection);
         btnConnection.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,21 +49,21 @@ public class connection_frag extends android.support.v4.app.Fragment{
     }
 
     public void tryConnection(){
-        SharedPreferences pref = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this.getContext());
 
         user = requestUser.tryToConnectUser(txtLogin.getText().toString(), txtPass.getText().toString());
         if(user != null){
-            SharedPreferences.Editor editor = pref.edit();
+            SharedPreferences.Editor editor = shared.edit();
             editor.putString("connectedUserName", user.getNom());
             editor.putString("connectedUserForname", user.getPrenom());
+            editor.putString("connectedUserMail", user.getEmail());
             editor.putInt("connectedUserId", user.getId());
             editor.commit();
-            txtConnection.setText("Connecté en tant que:"+pref.getString("connectedUserName", "") + " " +pref.getString("connectedUserForname", ""));
 
             FragmentManager manager = this.getActivity().getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.content_nav, new disconnect_frag()).commit();
         }else{
-            txtConnection.setText("Mauvaise combinaison login / pass");
+            Toast.makeText(getContext(), "Mauvaise combinaison login/mot de passe", Toast.LENGTH_SHORT).show();
         }
     }
 }
