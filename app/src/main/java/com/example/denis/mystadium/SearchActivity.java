@@ -1,5 +1,8 @@
 package com.example.denis.mystadium;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.icu.text.IDNA;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,10 +12,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 
 import com.example.denis.mystadium.Model.InfoMembre;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
@@ -24,6 +29,9 @@ public class SearchActivity extends AppCompatActivity {
     private HttpRequestMembre requestManager;
     private ArrayAdapter<InfoMembre> adaptater;
     private  List<InfoMembre> listFromRest;
+
+    private List<InfoMembre> listeSuivis;
+
 
 
     @Override
@@ -43,16 +51,21 @@ public class SearchActivity extends AppCompatActivity {
                 btnSearchClicked();
             }
         });
-
-
-
-
+        searchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                searchList.setItemChecked(position, true);
+                view.setBackgroundColor(Color.CYAN);
+                adaptater.notifyDataSetChanged();
+            }
+        });
+        searchList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
     }
 
     public void btnSearchClicked(){
         listFromRest= requestManager.getMembreFromSearch(txtSearch.getText().toString());
-        adaptater = new ArrayAdapter<InfoMembre>(this, android.R.layout.simple_list_item_1, listFromRest);
+        adaptater = new ArrayAdapter<InfoMembre>(this, android.R.layout.simple_list_item_activated_1, listFromRest);
         searchList.setAdapter(adaptater);
     }
 }

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.ListViewAutoScrollHelper;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +36,7 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
     private HttpRequestMembre requestManager;
     private ArrayAdapter<InfoMembre> adaptater;
     private Button btnAdd;
+    private List<InfoMembre> favPlayersList;
 
 
 
@@ -54,7 +56,7 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
         });
 
         SharedPreferences pref = this.getActivity().getPreferences(Context.MODE_PRIVATE);
-        final List<InfoMembre> favPlayersList= requestManager.getFavPlayersList(pref.getInt("connectedUserId", 0));
+        favPlayersList= requestManager.getFavPlayersList(pref.getInt("connectedUserId", 0));
 
         playersList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -65,6 +67,7 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
 
         adaptater = new ArrayAdapter<InfoMembre>(this.getContext(), android.R.layout.simple_list_item_1, favPlayersList);
         playersList.setAdapter(adaptater);
+
         return myView;
     }
 
@@ -95,5 +98,10 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
     private void btnAddClicked(){
         Intent intent = new Intent(super.getContext(), SearchActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 }

@@ -1,5 +1,8 @@
 package com.example.denis.mystadium.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.Date;
@@ -9,7 +12,7 @@ import java.util.Date;
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class InfoMembre extends Membre{
+public class InfoMembre extends Membre implements Parcelable{
     private String nomClub;
     private String categorieAge;
     private String strRole;
@@ -74,4 +77,37 @@ public class InfoMembre extends Membre{
     public String toString(){
         return getNom() + " " +getPrenom();
     }
+
+    public InfoMembre(Parcel in){
+        String[] data = new String[3];
+
+        in.readStringArray(data);
+        setId(Integer.parseInt(data[0]));
+        setNom(data[1]);
+        setPrenom(data[2]);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeStringArray(new String[]{
+                ""+getId(),
+                getNom(),
+                getPrenom()
+        });
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public InfoMembre createFromParcel(Parcel in) {
+            return new InfoMembre(in);
+        }
+
+        public InfoMembre[] newArray(int size) {
+            return new InfoMembre[size];
+        }
+    };
 }
