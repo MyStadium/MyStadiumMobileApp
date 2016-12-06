@@ -83,8 +83,7 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
                 .setPositiveButton("Ne plus suivre", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences pref = getActivity().getPreferences(Context.MODE_PRIVATE);
-
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
                         requestManager.deleteFav(pref.getInt("connectedUserId", 0), favPlayersList.get(pos).getId());
                         favPlayersList.remove(pos);
                         adaptater.notifyDataSetChanged();
@@ -98,11 +97,21 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
 
     private void btnAddClicked(){
         Intent intent = new Intent(super.getContext(), SearchActivity.class);
-        startActivity(intent);
+        intent.putParcelableArrayListExtra("listFavRest", (ArrayList<InfoMembre>)favPlayersList);
+        startActivityForResult(intent, 2555);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        ArrayList<InfoMembre>liste;
+        if (requestCode == 2555) {
+            liste = data.getParcelableArrayListExtra("listFavRest");
+            favPlayersList = liste;
+            adaptater = new ArrayAdapter<InfoMembre>(this.getContext(), android.R.layout.simple_list_item_1, favPlayersList);
+            playersList.setAdapter(adaptater);
+            adaptater.notifyDataSetChanged();
+        }
     }
+
 }

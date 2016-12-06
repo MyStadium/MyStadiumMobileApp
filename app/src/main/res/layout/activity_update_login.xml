@@ -36,4 +36,43 @@
         android:id="@+id/txtUpdateMail"
         android:layout_centerVertical="true"
         android:layout_alignStart="@+id/textView7" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/txtUpdatePrenom"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="58dp"
+        android:id="@+id/editPrenom" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_below="@+id/editPrenom"
+        android:layout_alignStart="@+id/editPrenom"
+        android:layout_marginTop="35dp"
+        android:id="@+id/editNom" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/editNom"
+        android:id="@+id/editMail" />
+
+    <Button
+        android:text="Valider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="56dp"
+        android:id="@+id/btnValidateUpdate" />
 </RelativeLayout>

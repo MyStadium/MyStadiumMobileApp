@@ -1,5 +1,6 @@
 package com.example.denis.mystadium;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +19,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 
+import com.example.denis.mystadium.Model.Favoris;
 import com.example.denis.mystadium.Model.InfoMembre;
 import com.example.denis.mystadium.Model.Suivre;
 
@@ -37,12 +39,15 @@ public class SearchActivity extends AppCompatActivity {
 
     private List<InfoMembre> listeSuivis;
 
+    RequestManager postManager;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestManager = new HttpRequestMembre();
+        postManager = new RequestManager();
 
 
         setContentView(R.layout.activity_search);
@@ -74,6 +79,17 @@ public class SearchActivity extends AppCompatActivity {
         });
         searchList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
+        if (savedInstanceState == null) {
+            Bundle extra = getIntent().getExtras();
+            if (extra == null) {
+                listeSuivis = null;
+            } else {
+                listeSuivis=(ArrayList<InfoMembre>)extra.getSerializable("listFavRest");
+            }
+        } else {
+            listeSuivis=(ArrayList<InfoMembre>)savedInstanceState.getSerializable("listFavRest");
+        }
+
     }
 
     public void btnSearchClicked(){
@@ -86,10 +102,19 @@ public class SearchActivity extends AppCompatActivity {
         if(selectedMember != null){
             SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
             int idUtilisateur = shared.getInt("connectedUserId", 0);
-            Suivre suivi = new Suivre(selectedMember.getId(), idUtilisateur);
-            requestManager.addFav(suivi);
+            Suivre s = new Suivre(selectedMember.getId(), idUtilisateur);
+            postManager.postRequestSuivi("suivre", s);
+            listeSuivis.add(selectedMember);
         }else{
             Toast.makeText(this, "Aucun membre selectionné", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent resultIntent = new Intent();
+        resultIntent.putParcelableArrayListExtra("listFavRest", (ArrayList<InfoMembre>)listeSuivis);
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
     }
 }

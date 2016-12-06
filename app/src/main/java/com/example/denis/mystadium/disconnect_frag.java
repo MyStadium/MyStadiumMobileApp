@@ -56,7 +56,7 @@ public class disconnect_frag extends Fragment {
 
 
     public void disconnectUser(){
-        SharedPreferences shared = this.getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = shared.edit();
         editor.putString("connectedUserName", "");
         editor.putString("connectedUserForname", "");

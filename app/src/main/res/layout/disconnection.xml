@@ -70,18 +70,9 @@
         android:text="Deconnecter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
         android:id="@+id/btnDisconnect"
+        android:layout_marginBottom="38dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:text="Modifier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btnDisconnect"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="13dp"
-        android:id="@+id/button2" />
+        android:layout_alignEnd="@+id/txtConnected" />
 
 </RelativeLayout>

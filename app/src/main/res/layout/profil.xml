@@ -22,17 +22,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="58dp" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="Name"
-        android:ems="10"
-        android:layout_above="@+id/btnget"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="34dp"
-        android:id="@+id/editText" />
-
     <TextView
         android:text="ID:"
         android:layout_width="wrap_content"

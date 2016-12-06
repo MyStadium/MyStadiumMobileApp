@@ -26,31 +26,32 @@ public class GPSTracker extends Service implements LocationListener {
 
     private final Context context;
 
-    boolean canGetLocation = true;
+    boolean canGetLocation = false;
 
     Location location;
 
     double longitude;
     double latitude;
 
-    private static final long MIN_DISTANCE_UPDATE = 1;
-    private static final long MIN_UPDATE = 1000 * 60;
-
     protected LocationManager locationManager;
 
     public GPSTracker(Context context) {
         this.context = context;
+
         location = getLocation();
+
     }
 
     public Location getLocation() {
         try {
             locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            canGetLocation = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-            }else {
-                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
             }
+            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER); //souligné en rouge en hommage au standard;
               if(location != null){
                       latitude = location.getLatitude();
                       longitude = location.getLongitude();
@@ -79,7 +80,6 @@ public class GPSTracker extends Service implements LocationListener {
     }
 
     public boolean canGetlocation(){
-
         return this.canGetLocation;
     }
 
