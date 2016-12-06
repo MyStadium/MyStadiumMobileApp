@@ -1,18 +1,12 @@
 package com.example.denis.mystadium;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.ListViewAutoScrollHelper;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +17,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.denis.mystadium.Model.InfoMembre;
+import com.example.denis.mystadium.Request.HttpManagerSuivi;
+import com.example.denis.mystadium.Request.HttpManagerMembre;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,22 +29,40 @@ import java.util.List;
 
 public class joueurs_frag extends android.support.v4.app.Fragment{
     private View myView;
-    private ListView playersList;
-    private HttpRequestMembre requestManager;
+    private ListView playersFollowedListView;
+    private HttpManagerSuivi httpSuiviManager;
+    private HttpManagerMembre httpMembreManager;
     private ArrayAdapter<InfoMembre> adaptater;
     private Button btnAdd;
     private List<InfoMembre> favPlayersList;
+    private SharedPreferences pref;
+    private String playerLongClickName;
 
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //instanciate variables
         myView = inflater.inflate(R.layout.joueurs, container, false);
-        requestManager = new HttpRequestMembre();
-        playersList = (ListView) myView.findViewById(R.id.playersList);
+        httpSuiviManager = new HttpManagerSuivi();
+        httpMembreManager = new HttpManagerMembre();
+        playersFollowedListView = (ListView) myView.findViewById(R.id.playersList);
         btnAdd = (Button)myView.findViewById(R.id.btnAdd);
+        pref = PreferenceManager.getDefaultSharedPreferences(this.getContext());
+        try{
+            favPlayersList= httpMembreManager.getFollowingPlayersList(pref.getInt("connectedUserId", 0));
+        }catch(Exception e){
+            Toast.makeText(getContext(), "Impossible de charger la liste de joueur", Toast.LENGTH_LONG).show();
+        }
 
+        //adaptater
+        adaptater = new ArrayAdapter<InfoMembre>(this.getContext(), android.R.layout.simple_list_item_1, favPlayersList);
+        playersFollowedListView.setAdapter(adaptater);
+        adaptater.notifyDataSetChanged();
+
+
+        //listeners
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,25 +70,19 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
             }
         });
 
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-        favPlayersList= requestManager.getFavPlayersList(pref.getInt("connectedUserId", 0));
-
-        playersList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        playersFollowedListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int pos, long id) {
-               return buildDialog(favPlayersList, pos);
+                playerLongClickName = favPlayersList.get(pos).toString();
+               return buildDialog(pos);
             }
         });
-
-        adaptater = new ArrayAdapter<InfoMembre>(this.getContext(), android.R.layout.simple_list_item_1, favPlayersList);
-        playersList.setAdapter(adaptater);
-
         return myView;
     }
 
-    private boolean buildDialog(final List<InfoMembre> favPlayersList, final int pos){
+    private boolean buildDialog(final int pos){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Ne plus suivre " +favPlayersList.get(pos).getPrenom()+" "+favPlayersList.get(pos).getNom()+" ?")
+        builder.setMessage("Ne plus suivre " +favPlayersList.get(pos).toString()+" ?")
                 .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
@@ -83,11 +91,14 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
                 .setPositiveButton("Ne plus suivre", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
-                        requestManager.deleteFav(pref.getInt("connectedUserId", 0), favPlayersList.get(pos).getId());
-                        favPlayersList.remove(pos);
-                        adaptater.notifyDataSetChanged();
-                        Toast.makeText(getActivity().getApplicationContext(), "Vous ne suivez plus ce joueur", Toast.LENGTH_LONG).show();
+                        try{
+                            httpSuiviManager.deleteSuivi(pref.getInt("connectedUserId", 0), favPlayersList.get(pos).getId());
+                            favPlayersList.remove(pos);
+                            adaptater.notifyDataSetChanged();
+                            Toast.makeText(getActivity().getApplicationContext(), "Vous ne suivez plus "+playerLongClickName, Toast.LENGTH_LONG).show();
+                        }catch(Exception e){
+                            Toast.makeText(getContext(), "Erreur lors de la suppresion", Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
 
@@ -103,13 +114,10 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
-        ArrayList<InfoMembre>liste;
         if (requestCode == 2555) {
-            liste = data.getParcelableArrayListExtra("listFavRest");
-            favPlayersList = liste;
+            favPlayersList = data.getParcelableArrayListExtra("listFavRest");
             adaptater = new ArrayAdapter<InfoMembre>(this.getContext(), android.R.layout.simple_list_item_1, favPlayersList);
-            playersList.setAdapter(adaptater);
+            playersFollowedListView.setAdapter(adaptater);
             adaptater.notifyDataSetChanged();
         }
     }

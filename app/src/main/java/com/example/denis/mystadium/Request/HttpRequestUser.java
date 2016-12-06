@@ -1,4 +1,4 @@
-package com.example.denis.mystadium;
+package com.example.denis.mystadium.Request;
 
 import android.os.AsyncTask;
 import android.util.Log;

@@ -1,11 +1,9 @@
 package com.example.denis.mystadium;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.icu.text.IDNA;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,13 +13,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 
-import com.example.denis.mystadium.Model.Favoris;
 import com.example.denis.mystadium.Model.InfoMembre;
 import com.example.denis.mystadium.Model.Suivre;
+import com.example.denis.mystadium.Request.HttpManagerSuivi;
+import com.example.denis.mystadium.Request.HttpManagerMembre;
+
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,31 +30,37 @@ public class SearchActivity extends AppCompatActivity {
 
     private Button btnSearch;
     private Button btnAddSearch;
-    private ListView searchList;
+    private ListView searchListView;
     private EditText txtSearch;
-    private HttpRequestMembre requestManager;
+    private HttpManagerMembre httpMembreManager;
     private ArrayAdapter<InfoMembre> adaptater;
-    private  List<InfoMembre> listFromRest;
+    private  List<InfoMembre> listFromSearchInRest;
     private InfoMembre selectedMember;
-
     private List<InfoMembre> listeSuivis;
+    private HttpManagerSuivi httpManager;
 
-    RequestManager postManager;
+    private int previousItemSelected;
+    private int currentlyItemSelected;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestManager = new HttpRequestMembre();
-        postManager = new RequestManager();
-
-
         setContentView(R.layout.activity_search);
+        //variables instanciation
         btnSearch = (Button)findViewById(R.id.btnSearch);
         btnAddSearch = (Button)findViewById(R.id.btnAddSearch);
-        searchList = (ListView) findViewById(R.id.searchList);
+        searchListView = (ListView) findViewById(R.id.searchList);
         txtSearch = (EditText) findViewById(R.id.txtSearch);
+
+        httpMembreManager = new HttpManagerMembre();
+        httpManager = new HttpManagerSuivi();
+
+        previousItemSelected = -1;
+        currentlyItemSelected = -1;
+
+        //listeners
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,17 +73,13 @@ public class SearchActivity extends AppCompatActivity {
                 btnAddSearchClicked();
             }
         });
-        searchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        searchListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedMember = adaptater.getItem(position);
-                Toast.makeText(getApplicationContext(), "Sélectionné: "+adaptater.getItem(position).getNom() +" "+adaptater.getItem(position).getPrenom(), Toast.LENGTH_SHORT).show();
-                searchList.setItemChecked(position, true);
-                view.setBackgroundColor(Color.CYAN);
-                adaptater.notifyDataSetChanged();
+               onItemClickMethod(position);
             }
         });
-        searchList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        searchListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         if (savedInstanceState == null) {
             Bundle extra = getIntent().getExtras();
@@ -93,9 +95,14 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void btnSearchClicked(){
-        listFromRest= requestManager.getMembreFromSearch(txtSearch.getText().toString());
-        adaptater = new ArrayAdapter<InfoMembre>(this, android.R.layout.simple_list_item_activated_1, listFromRest);
-        searchList.setAdapter(adaptater);
+        try{
+            listFromSearchInRest= httpMembreManager.getMembreFromSearch(txtSearch.getText().toString());
+            adaptater = new ArrayAdapter<InfoMembre>(this, android.R.layout.simple_list_item_activated_1, listFromSearchInRest);
+            searchListView.setAdapter(adaptater);
+        }catch(Exception e){
+            Toast.makeText(this, "Erreur lors de la recherche", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     public void btnAddSearchClicked(){
@@ -103,11 +110,30 @@ public class SearchActivity extends AppCompatActivity {
             SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
             int idUtilisateur = shared.getInt("connectedUserId", 0);
             Suivre s = new Suivre(selectedMember.getId(), idUtilisateur);
-            postManager.postRequestSuivi("suivre", s);
-            listeSuivis.add(selectedMember);
+            try{
+                httpManager.postRequestSuivi("suivre", s);
+                listeSuivis.add(selectedMember);
+                Toast.makeText(this, "Vous suivez désormais " +selectedMember.toString(), Toast.LENGTH_SHORT).show();
+            }catch(HttpClientErrorException e){
+                Toast.makeText(this, "Vous suivez déjà ce joueur", Toast.LENGTH_SHORT).show();
+            }
+            catch(Exception e){
+                Toast.makeText(this, "Erreur lors de l'ajout du suivi", Toast.LENGTH_SHORT).show();
+            }
         }else{
             Toast.makeText(this, "Aucun membre selectionné", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void onItemClickMethod(int position){
+        currentlyItemSelected = position;
+        if(previousItemSelected != -1){
+            searchListView.getChildAt(previousItemSelected).setBackgroundColor(Color.TRANSPARENT);
+        }
+        searchListView.getChildAt(currentlyItemSelected).setBackgroundColor(Color.CYAN);
+        selectedMember = adaptater.getItem(position);
+        adaptater.notifyDataSetChanged();
+        previousItemSelected = position;
     }
 
     @Override

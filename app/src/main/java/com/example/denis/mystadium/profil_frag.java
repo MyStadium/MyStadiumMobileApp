@@ -9,17 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.denis.mystadium.Model.Suivre;
 import com.example.denis.mystadium.Model.Utilisateur;
-
-import org.springframework.http.HttpEntity;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
+import com.example.denis.mystadium.Request.HttpRequestUser;
 
 /**
  * Created by denis on 30-11-16.
