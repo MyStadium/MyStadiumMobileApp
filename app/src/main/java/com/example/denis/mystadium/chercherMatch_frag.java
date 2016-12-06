@@ -4,34 +4,15 @@ package com.example.denis.mystadium;
 
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.denis.mystadium.Model.InfoMembre;
-import com.example.denis.mystadium.Model.InfoRencontre;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by denis on 30-11-16.
@@ -41,8 +22,8 @@ public class chercherMatch_frag extends android.support.v4.app.Fragment{
     private View myView;
     private Button btnRecherche ;
     private Button btnDejaSurPlace ;
-    private DatePicker datePickerDebut;
-    private DatePicker datePickerFin;
+    private EditText datePickerDebut;
+    private EditText datePickerFin;
     private EditText nbKilometre;
     private GPSTracker gps;
 
@@ -53,8 +34,8 @@ public class chercherMatch_frag extends android.support.v4.app.Fragment{
         gps = new GPSTracker(this.getActivity().getApplicationContext());
         btnRecherche = (Button) myView.findViewById(R.id.btnRecherche);
         btnDejaSurPlace = (Button) myView.findViewById(R.id.btnLocaliserMatchProche);
-        datePickerDebut = (DatePicker) myView.findViewById(R.id.datePickerDebut);
-        datePickerFin = (DatePicker) myView.findViewById(R.id.datePickerFin);
+        datePickerDebut = (EditText) myView.findViewById(R.id.dateDebut);
+        datePickerFin = (EditText) myView.findViewById(R.id.dateFin);
         nbKilometre = (EditText) myView.findViewById(R.id.nbKilometre);
         btnDejaSurPlace.setOnClickListener(new View.OnClickListener() {
 
@@ -80,8 +61,8 @@ public class chercherMatch_frag extends android.support.v4.app.Fragment{
             @Override
             public void onClick(View v){
 
-                    String dateDebut = datePickerDebut.toString();
-                    String dateFin = datePickerFin.toString();
+                    String dateDebut = datePickerDebut.getText().toString();
+                    String dateFin = datePickerFin.getText().toString();
                     String nbKilometreString = nbKilometre.toString();
                     double latitude = gps.getLatitude();
                     double longitude = gps.getLongitude();

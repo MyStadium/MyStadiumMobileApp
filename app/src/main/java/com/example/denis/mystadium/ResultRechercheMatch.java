@@ -1,5 +1,6 @@
 package com.example.denis.mystadium;
 
+import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -14,18 +15,17 @@ import com.example.denis.mystadium.Model.InfoRencontre;
 
 import java.util.List;
 
-public class ResultRechercheMatch extends Fragment {
-    private View myView;
+public class ResultRechercheMatch extends Activity {
     private ListView listViewResult;
     private ArrayAdapter<InfoRencontre> adaptater;
     private HttpRequestMembre requestManager;
     private List<InfoRencontre> rencontreList;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        myView = inflater.inflate(R.layout.result_recherche_frag,container,false);
-        listViewResult = (ListView)myView.findViewById(R.id.listViewResult);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.result_recherche_frag);
+        listViewResult = (ListView)findViewById(R.id.listViewResult);
         requestManager = new HttpRequestMembre();
         String dateDebut = savedInstanceState.getString("dateDebut");
         String dateFin = savedInstanceState.getString("dateFin");
@@ -37,8 +37,8 @@ public class ResultRechercheMatch extends Fragment {
         }else{
             rencontreList = requestManager.getRencontreProcheList(latitude,longitude);
         }
-        adaptater = new ArrayAdapter<InfoRencontre>(this.getActivity().getApplicationContext(),android.R.layout.simple_list_item_1,rencontreList);
+        adaptater = new ArrayAdapter<InfoRencontre>(this.getApplicationContext(),android.R.layout.simple_list_item_1,rencontreList);
         listViewResult.setAdapter(adaptater);
-        return myView;
+
     }
 }
