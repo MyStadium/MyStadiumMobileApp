@@ -25,7 +25,7 @@
         <activity android:name=".SearchMembreActivity" />
         <activity android:name=".SearchTeamActivity" />
         <activity android:name=".updateLoginActivity" />
-        <activity android:name=".InscriptionActivity"></activity>
+        <activity android:name=".ResultRechercheMatch"></activity>
     </application>
 
 </manifest>
