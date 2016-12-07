@@ -22,9 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SearchActivity" />
-        <activity android:name=".updateLoginActivity"></activity>
-        <activity android:name=".ResultRechercheMatch"></activity>
+        <activity android:name=".SearchMembreActivity" />
+        <activity android:name=".SearchTeamActivity" />
+        <activity android:name=".updateLoginActivity" />
+        <activity android:name=".InscriptionActivity"></activity>
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.example.denis.mystadium;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -13,7 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.denis.mystadium.Model.Utilisateur;
-import com.example.denis.mystadium.Request.HttpRequestUser;
+import com.example.denis.mystadium.Request.HttpManagerUtilisateur;
 
 /**
  * Created by denis on 30-11-16.
@@ -24,8 +25,9 @@ public class connection_frag extends android.support.v4.app.Fragment{
     private EditText txtLogin;
     private EditText txtPass;
     private Button btnConnection;
+    private Button btnInscription;
     private Utilisateur user = null;
-    private HttpRequestUser requestUser;
+    private HttpManagerUtilisateur requestUser;
 
 
     @Nullable
@@ -33,14 +35,22 @@ public class connection_frag extends android.support.v4.app.Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         myView = inflater.inflate(R.layout.connection, container, false);
 
-        requestUser = new HttpRequestUser();
+        requestUser = new HttpManagerUtilisateur();
         txtLogin = (EditText) myView.findViewById(R.id.txtLogin);
         txtPass = (EditText) myView.findViewById(R.id.txtPass);
         btnConnection = (Button) myView.findViewById(R.id.btnConnection);
+        btnInscription = (Button) myView.findViewById(R.id.btnInscription);
         btnConnection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 tryConnection();
+            }
+        });
+
+        btnInscription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnInscriptionClicked();
             }
         });
 
@@ -50,12 +60,20 @@ public class connection_frag extends android.support.v4.app.Fragment{
     public void tryConnection(){
         SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this.getContext());
 
-        user = requestUser.tryToConnectUser(txtLogin.getText().toString(), txtPass.getText().toString());
+        try {
+            user = requestUser.tryToConnectUser(txtLogin.getText().toString(), txtPass.getText().toString());
+        }catch(Exception e){
+            Toast.makeText(getContext(), "Erreur lors de l'accès au serveur", Toast.LENGTH_SHORT).show();
+        }
         if(user != null){
             SharedPreferences.Editor editor = shared.edit();
             editor.putString("connectedUserName", user.getNom());
             editor.putString("connectedUserForname", user.getPrenom());
             editor.putString("connectedUserMail", user.getEmail());
+            editor.putString("connectedUserPassword", user.getPass());
+            editor.putString("connectedUserLogin", user.getLogin());
+            editor.putInt("connectedUserIdRole", user.getIdRole());
+            editor.putInt("connectedUserNbrBonScore", user.getNbrBonScore());
             editor.putInt("connectedUserId", user.getId());
             editor.commit();
 
@@ -65,4 +83,10 @@ public class connection_frag extends android.support.v4.app.Fragment{
             Toast.makeText(getContext(), "Mauvaise combinaison login/mot de passe", Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void btnInscriptionClicked(){
+        Intent intent = new Intent(super.getContext(), InscriptionActivity.class);
+        startActivity(intent);
+    }
+
 }

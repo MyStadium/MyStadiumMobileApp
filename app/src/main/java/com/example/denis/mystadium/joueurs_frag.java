@@ -52,14 +52,15 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
         pref = PreferenceManager.getDefaultSharedPreferences(this.getContext());
         try{
             favPlayersList= httpMembreManager.getFollowingPlayersList(pref.getInt("connectedUserId", 0));
+            //adaptater
+            adaptater = new ArrayAdapter<InfoMembre>(this.getContext(), android.R.layout.simple_list_item_1, favPlayersList);
+            playersFollowedListView.setAdapter(adaptater);
+            adaptater.notifyDataSetChanged();
         }catch(Exception e){
             Toast.makeText(getContext(), "Impossible de charger la liste de joueur", Toast.LENGTH_LONG).show();
         }
 
-        //adaptater
-        adaptater = new ArrayAdapter<InfoMembre>(this.getContext(), android.R.layout.simple_list_item_1, favPlayersList);
-        playersFollowedListView.setAdapter(adaptater);
-        adaptater.notifyDataSetChanged();
+
 
 
         //listeners
@@ -107,7 +108,7 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
     }
 
     private void btnAddClicked(){
-        Intent intent = new Intent(super.getContext(), SearchActivity.class);
+        Intent intent = new Intent(super.getContext(), SearchMembreActivity.class);
         intent.putParcelableArrayListExtra("listFavRest", (ArrayList<InfoMembre>)favPlayersList);
         startActivityForResult(intent, 2555);
     }
