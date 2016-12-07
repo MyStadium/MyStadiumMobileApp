@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_inscription"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.denis.mystadium.InscriptionActivity">
+
+    <TextView
+        android:text="Inscription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/textView12"
+        android:textSize="24sp" />
+
+    <Button
+        android:text="Valider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/btnInscriptionValider" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_marginTop="13dp"
+        android:id="@+id/editInscriptionNom"
+        android:hint="Nom"
+        android:layout_below="@+id/textView12"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_marginTop="22dp"
+        android:id="@+id/editInscriptionPrenom"
+        android:hint="Prénom"
+        android:layout_below="@+id/editInscriptionNom"
+        android:layout_alignStart="@+id/editInscriptionNom" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_below="@+id/editInscriptionPrenom"
+        android:layout_alignStart="@+id/editInscriptionPrenom"
+        android:layout_marginTop="14dp"
+        android:id="@+id/editInscriptionLogin"
+        android:hint="Login" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editInscriptionMail"
+        android:hint="Adresse mail"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/editInscriptionLogin" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/editInscriptionPass"
+        android:hint="Mot de passe"
+        android:layout_below="@+id/editInscriptionMail"
+        android:layout_alignStart="@+id/editInscriptionMail"
+        android:layout_marginTop="22dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/editInscriptionPassConf"
+        android:hint="Confirmation"
+        android:layout_below="@+id/editInscriptionPass"
+        android:layout_alignStart="@+id/editInscriptionPass"
+        android:layout_marginTop="18dp" />
+
+</RelativeLayout>
