@@ -40,7 +40,7 @@ public class profil_frag extends android.support.v4.app.Fragment{
             public void onClick(View v)
             {
                 Location location = gps.getLocation();
-                if(gps.canGetLocation){
+                if(gps.canGetlocation()){
                     txt.setText("LAT:" +location.getLatitude()+ "\nLONG:"+location.getLongitude());
                 }else{
                     txt.setText("Activez la location svp");

@@ -1,5 +1,10 @@
 package com.example.denis.mystadium;
 
+import com.example.denis.mystadium.Model.Favoris;
+import com.example.denis.mystadium.Model.Suivre;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
