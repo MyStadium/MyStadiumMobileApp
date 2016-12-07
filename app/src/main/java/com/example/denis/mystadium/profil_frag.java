@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.denis.mystadium.Model.Utilisateur;
-import com.example.denis.mystadium.Request.HttpRequestUser;
+import com.example.denis.mystadium.Request.HttpManagerUtilisateur;
 
 /**
  * Created by denis on 30-11-16.
@@ -24,7 +24,7 @@ public class profil_frag extends android.support.v4.app.Fragment{
     private Button btnGet;
     private TextView txt;
     Utilisateur user;
-    HttpRequestUser requestmanager;
+    HttpManagerUtilisateur requestmanager;
 
     @Nullable
     @Override

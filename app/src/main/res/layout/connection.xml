@@ -3,7 +3,7 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <TextView
-        android:text="Connection"
+        android:text="Connexion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView3"
@@ -42,5 +42,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="55dp"
         android:id="@+id/btnConnection" />
+
+    <Button
+        android:text="S'inscrire"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="41dp"
+        android:id="@+id/btnInscription" />
 
 </RelativeLayout>
