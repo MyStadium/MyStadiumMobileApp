@@ -24,6 +24,7 @@
         </activity>
         <activity android:name=".SearchActivity" />
         <activity android:name=".updateLoginActivity"></activity>
+        <activity android:name=".ResultRechercheMatch"></activity>
     </application>
 
 </manifest>
