@@ -1,14 +1,18 @@
 package com.example.denis.mystadium;
 
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.denis.mystadium.Model.InfoRencontre;
 import com.example.denis.mystadium.Request.HttpManagerRencontre;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ResultRechercheMatch extends AppCompatActivity {
@@ -16,6 +20,8 @@ public class ResultRechercheMatch extends AppCompatActivity {
     private ArrayAdapter<InfoRencontre> adaptater;
     private HttpManagerRencontre requestManager;
     private List<InfoRencontre> rencontreList;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,5 +57,19 @@ public class ResultRechercheMatch extends AppCompatActivity {
         }
         adaptater = new ArrayAdapter<InfoRencontre>(this,android.R.layout.simple_list_item_1,rencontreList);
         listViewResult.setAdapter(adaptater);
+        listViewResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                onRencontreClick(position);
+            }
+        });
+    }
+
+    public void onRencontreClick(int pos){
+        int selectedMatch = pos;
+        InfoRencontre r = rencontreList.get(pos);
+        Intent intent = new Intent(this, BeforeMatchActivity.class);
+        intent.putExtra("selectedRencontreId", r.getIdRencontre());
+        startActivity(intent);
     }
 }

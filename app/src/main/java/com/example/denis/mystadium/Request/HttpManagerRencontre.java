@@ -58,4 +58,14 @@ public class HttpManagerRencontre {
             return null;
         }
     }
+
+    public InfoRencontre getInfoRencontreById(int id) throws Exception{
+        try{
+            HttpManager manager = new HttpManager();
+            InfoRencontre rencontre = manager.getTemplate().getForObject(manager.getRestUrl()+"/infoRencontre/id/"+id, InfoRencontre.class);
+            return rencontre;
+        }catch(Exception e){
+            throw e;
+        }
+    }
 }
