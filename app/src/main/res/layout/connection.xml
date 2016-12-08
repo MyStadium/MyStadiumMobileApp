@@ -42,7 +42,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="55dp"
         android:id="@+id/btnConnection" />
-
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="21dp"
+        android:layout_below="@+id/btnConnection"
+        android:layout_centerHorizontal="true" />
     <Button
         android:text="S'inscrire"
         android:layout_width="wrap_content"

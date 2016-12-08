@@ -75,6 +75,7 @@ public class disconnect_frag extends Fragment {
         editor.putString("connectedUserMail", "");
         editor.putInt("connectedUserId", 0);
         editor.commit();
+
         txtConnected.setText("Aucun utilisateur connecté");
 
         FragmentManager manager = this.getActivity().getSupportFragmentManager();
