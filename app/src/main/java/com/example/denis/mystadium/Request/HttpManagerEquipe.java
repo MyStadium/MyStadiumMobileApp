@@ -31,6 +31,17 @@ public class HttpManagerEquipe extends AsyncTask<Integer, Void, InfoEquipe>{
         }
     }
 
+    public List<InfoEquipe> getClassementForChampionnat (int idChampionnat) throws Exception{
+        try {
+            HttpManager manager = new HttpManager();
+            ResponseEntity<InfoEquipe[]> responseEntity =  manager.getTemplate().getForEntity(manager.getRestUrl()+"/championnat/"+idChampionnat+"/classement", InfoEquipe[].class);
+            List<InfoEquipe> liste =  new ArrayList<InfoEquipe>(Arrays.asList( responseEntity.getBody()));
+            return liste;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
     public InfoEquipe getEquipeById (int id) throws Exception{
         try {
             HttpManager manager = new HttpManager();

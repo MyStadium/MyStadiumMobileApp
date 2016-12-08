@@ -1,7 +1,10 @@
 package com.example.denis.mystadium;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.denis.mystadium.Model.Equipe;
@@ -11,6 +14,7 @@ import com.example.denis.mystadium.Request.HttpManagerEquipe;
 import com.example.denis.mystadium.Request.HttpManagerRencontre;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class BeforeMatchActivity extends AppCompatActivity {
 
@@ -31,6 +35,7 @@ public class BeforeMatchActivity extends AppCompatActivity {
     private TextView txtCategorie;
     private TextView txtNomStade;
     private TextView txtAdresseStade;
+    private Button btnViewClassement;
 
     private InfoRencontre rencontre;
     private InfoEquipe equipeDomicile;
@@ -64,6 +69,8 @@ public class BeforeMatchActivity extends AppCompatActivity {
         txtNomStade = (TextView) findViewById(R.id.txtNomStade);
         txtAdresseStade = (TextView) findViewById(R.id.txtAdresseStade);
 
+        btnViewClassement = (Button) findViewById(R.id.btnViewClassement);
+
         httpRencontreManager = new HttpManagerRencontre();
         httpEquipeManager = new HttpManagerEquipe();
 
@@ -75,6 +82,13 @@ public class BeforeMatchActivity extends AppCompatActivity {
         }else{
             selectedRencontreId = savedInstanceState.getInt("selectedRencontreId");
         }
+
+        btnViewClassement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewClassement();
+            }
+        });
 
         try{
 
@@ -105,5 +119,12 @@ public class BeforeMatchActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    public void viewClassement(){
+        Intent intent = new Intent(this, ClassementActivity.class);
+        intent.putExtra("idChampionnat", rencontre.getIdChampionnat());
+        intent.putExtra("libelleChampionnat", equipeDomicile.getCategorieAge() +" "+rencontre.getLibelleChampionnat());
+        startActivity(intent);
     }
 }
