@@ -3,6 +3,7 @@ package com.example.denis.mystadium.Request;
 import com.example.denis.mystadium.Model.Suivre;
 
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
@@ -32,9 +33,14 @@ public class HttpManagerSuivi {
         HttpEntity<Suivre> request = new HttpEntity<Suivre>(o, headers);
         try{
             manager.getTemplate().postForObject(manager.getRestUrl()+"/suivre",request,Suivre.class);
-        }catch(HttpClientErrorException e){
-            throw e;
-        }catch(Exception e){
+        }catch (HttpClientErrorException e) {
+            HttpStatus status = e.getStatusCode();
+            if(status == HttpStatus.NOT_ACCEPTABLE){
+                throw e;
+            }else{
+                throw new Exception();
+            }
+        }catch (Exception e) {
             throw e;
         }
 
