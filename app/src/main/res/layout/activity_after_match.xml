@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_after_match"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.denis.mystadium.AfterMatchActivity">
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtAfterMatchDate"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtAfterMatchNomExterieur"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textSize="14sp"
+        android:layout_below="@+id/txtAfterMatchDate"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="24dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtAfterMatchNomDomicile"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textSize="14sp"
+        android:layout_alignBaseline="@+id/txtAfterMatchNomExterieur"
+        android:layout_alignBottom="@+id/txtAfterMatchNomExterieur"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtAfterMatchScore"
+        android:layout_below="@+id/txtAfterMatchNomExterieur"
+        android:layout_centerHorizontal="true"
+        android:textSize="24sp" />
+
+    <TextView
+        android:text="Terminé"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView16"
+        android:layout_above="@+id/txtAfterMatchNomDomicile"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="Commentaires"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnAddScore"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp"
+        android:id="@+id/textView24" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/textView24"
+        android:layout_alignParentStart="true"
+        android:id="@+id/listAfterMatchCommentaire" />
+
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:id="@+id/spinnerScoreDomicile"
+        android:layout_alignTop="@+id/btnAddScore"
+        android:layout_alignParentStart="true" />
+
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinnerScoreExterieur"
+        android:layout_alignTop="@+id/spinnerScoreDomicile"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="Donner score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnAddScore"
+        android:layout_marginTop="22dp"
+        android:layout_below="@+id/btnAmbiance"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text="Ambiance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnAmbiance"
+        android:layout_alignBaseline="@+id/btnVoteMVP"
+        android:layout_alignBottom="@+id/btnVoteMVP"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="MVP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90dp"
+        android:id="@+id/btnVoteMVP"
+        android:layout_below="@+id/txtAfterMatchScore"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Ambiance:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:id="@+id/txtAfterMatchAmbiance"
+        android:layout_below="@+id/txtAfterMatchScore"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Niveau:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtAfterMatchNiveau"
+        android:layout_centerHorizontal="true"
+        android:layout_alignBaseline="@+id/txtAfterMatchAmbiance"
+        android:layout_alignBottom="@+id/txtAfterMatchAmbiance"
+        android:layout_alignStart="@+id/txtAfterMatchScore" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/txtAfterMatchNiveau"
+        android:layout_alignStart="@+id/btnAmbiance"
+        android:layout_marginStart="5dp"
+        android:id="@+id/txtAfterMatchFairplay" />
+
+</RelativeLayout>

@@ -85,7 +85,7 @@ public class connection_frag extends android.support.v4.app.Fragment{
     }
 
     public void btnInscriptionClicked(){
-        Intent intent = new Intent(super.getContext(), InscriptionActivity.class);
+        Intent intent = new Intent(getContext(), InscriptionActivity.class);
         startActivity(intent);
     }
 

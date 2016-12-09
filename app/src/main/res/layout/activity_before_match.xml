@@ -23,7 +23,7 @@
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txtNomDomicile"
+        android:id="@+id/txtAfterMatchNomDomicile"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
@@ -32,10 +32,10 @@
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtNomDomicile"
+        android:layout_below="@+id/txtAfterMatchNomDomicile"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        android:id="@+id/txtRencontreDate" />
+        android:id="@+id/txtAfterMatchDate" />
 
     <TextView
         android:text="Gagnés"
@@ -93,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:id="@+id/textView17"
-        android:layout_below="@+id/txtRencontreDate"
+        android:layout_below="@+id/txtAfterMatchDate"
         android:layout_centerHorizontal="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 

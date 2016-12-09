@@ -7,14 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.denis.mystadium.Model.Equipe;
 import com.example.denis.mystadium.Model.InfoEquipe;
 import com.example.denis.mystadium.Model.InfoRencontre;
 import com.example.denis.mystadium.Request.HttpManagerEquipe;
 import com.example.denis.mystadium.Request.HttpManagerRencontre;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 public class BeforeMatchActivity extends AppCompatActivity {
 
@@ -51,9 +49,9 @@ public class BeforeMatchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_before_match);
 
-        txtNomDomicile = (TextView)findViewById(R.id.txtNomDomicile);
+        txtNomDomicile = (TextView)findViewById(R.id.txtAfterMatchNomDomicile);
         txtNomExterieur = (TextView)findViewById(R.id.txtNomExterieur);
-        txtRencontreDate = (TextView)findViewById(R.id.txtRencontreDate);
+        txtRencontreDate = (TextView)findViewById(R.id.txtAfterMatchDate);
         txtRencontreJournee = (TextView) findViewById(R.id.txtRencontreJournée);
         txtMarqueDomicile = (TextView) findViewById(R.id.txtMarqueDomicile);
         txtMarqueExterieur = (TextView) findViewById(R.id.txtMarqueExterieur);
