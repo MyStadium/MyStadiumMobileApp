@@ -8,11 +8,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.denis.mystadium.Model.InfoRencontre;
 import com.example.denis.mystadium.Request.HttpManagerRencontre;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class ResultRechercheMatch extends AppCompatActivity {
@@ -67,8 +69,15 @@ public class ResultRechercheMatch extends AppCompatActivity {
 
     public void onRencontreClick(int pos){
         int selectedMatch = pos;
+        Date now = new Date();
         InfoRencontre r = rencontreList.get(pos);
-        Intent intent = new Intent(this, BeforeMatchActivity.class);
+        Intent intent;
+        if(r.getDateHeure().compareTo(now) > 0){
+            intent = new Intent(this, BeforeMatchActivity.class);
+            Toast.makeText(getApplicationContext(), "Le match n'a pas encore commencé", Toast.LENGTH_SHORT).show();
+        }else{
+            intent = new Intent(this, AfterMatchActivity.class);
+        }
         intent.putExtra("selectedRencontreId", r.getIdRencontre());
         startActivity(intent);
     }

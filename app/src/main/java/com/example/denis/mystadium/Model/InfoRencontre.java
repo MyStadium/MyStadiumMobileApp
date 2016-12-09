@@ -134,13 +134,19 @@ public class InfoRencontre extends Rencontre implements Parcelable{
         this.nomEquipeExterieur = nomEquipeExterieur;
     }
     public InfoRencontre(Parcel in){
-        String[] data = new String[4];
+        String[] data = new String[6];
         in.readStringArray(data);
         setIdRencontre(Integer.parseInt(data[0]));
         setNomEquipeDomicile(data[1]);
         setNomEquipeExterieur(data[2]);
         setScoreFinalDomicile(Integer.parseInt(data[3]));
         setScoreFinalExterieur(Integer.parseInt(data[4]));
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-hh-mm");
+        try{
+            Date date = format.parse(data[5]);
+            setDateHeure(date);
+        }catch(Exception e){}
+
     }
 
     @Override
@@ -150,12 +156,15 @@ public class InfoRencontre extends Rencontre implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-hh-mm");
+        String date = format.format(getDateHeure());
         parcel.writeStringArray(new String[]{
                 ""+getIdRencontre(),
                 getNomEquipeDomicile(),
                 getNomEquipeExterieur(),
                 ""+getScoreFinalDomicile(),
-                ""+getScoreFinalExterieur()
+                ""+getScoreFinalExterieur(),
+                date
         });
     }
     @Override

@@ -27,7 +27,9 @@
         <activity android:name=".updateLoginActivity" />
         <activity android:name=".ResultRechercheMatch" />
         <activity android:name=".BeforeMatchActivity" />
-        <activity android:name=".ClassementActivity"></activity>
+        <activity android:name=".InscriptionActivity" />
+        <activity android:name=".ClassementActivity" />
+        <activity android:name=".AfterMatchActivity"></activity>
     </application>
 
 </manifest>
