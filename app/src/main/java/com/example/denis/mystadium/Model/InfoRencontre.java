@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
