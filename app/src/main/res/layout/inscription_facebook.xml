@@ -1,0 +1,103 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.denis.mystadium.InscriptionFacebookActivity">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:text="Adresse mail :"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView18"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="44dp"
+            android:layout_marginTop="66dp" />
+
+        <TextView
+            android:text="Login :"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView18"
+            android:layout_alignStart="@+id/textView18"
+            android:layout_marginTop="60dp"
+            android:id="@+id/textView19" />
+
+        <TextView
+            android:text="Mot de passe :"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView19"
+            android:layout_alignStart="@+id/textView19"
+            android:layout_marginTop="52dp"
+            android:id="@+id/textView20" />
+
+        <TextView
+            android:text="Confirmation :"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView20"
+            android:layout_alignStart="@+id/textView20"
+            android:layout_marginTop="50dp"
+            android:id="@+id/textView21" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/textView20"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="49dp"
+            android:id="@+id/txtEmail" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:layout_below="@+id/txtEmail"
+            android:layout_marginTop="34dp"
+            android:id="@+id/txtLogin"
+            android:layout_alignEnd="@+id/txtPassword"
+            android:layout_toEndOf="@+id/textView20" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:layout_below="@+id/txtLogin"
+            android:layout_alignEnd="@+id/txtEmail"
+            android:layout_marginTop="30dp"
+            android:id="@+id/txtPassword"
+            android:layout_toEndOf="@+id/textView20" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:layout_below="@+id/txtPassword"
+            android:layout_alignStart="@+id/txtPassword"
+            android:layout_marginTop="26dp"
+            android:id="@+id/txtPasswordConf"
+            android:layout_alignEnd="@+id/txtPassword" />
+
+        <Button
+            android:text="Valider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnValider"
+            android:layout_marginBottom="39dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+</FrameLayout>

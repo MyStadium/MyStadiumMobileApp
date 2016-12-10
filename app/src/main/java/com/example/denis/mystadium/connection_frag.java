@@ -1,5 +1,6 @@
 package com.example.denis.mystadium;
 
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -50,7 +52,7 @@ public class connection_frag extends android.support.v4.app.Fragment{
     private HttpManagerUtilisateur requestUser;
     private LoginButton loginButton;
     private CallbackManager mCallBackManager;
-
+    private String idFacebook;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,22 +88,38 @@ public class connection_frag extends android.support.v4.app.Fragment{
                 public void onSuccess(LoginResult loginResult) {
                     AccessToken accessToken = loginResult.getAccessToken();
                     Profile profile = Profile.getCurrentProfile();
-                    final Utilisateur u = new Utilisateur();
+
+
                     GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
                         @Override
                         public void onCompleted(JSONObject object, GraphResponse response) {
-                                    u.setEmail(object.optString("id"));
+                                    idFacebook = object.optString("id");
                         }
                     });
                     request.executeAsync();
+                    user = requestUser.getUserByIdFacebook(idFacebook);
+                    if( user != null){
+                        SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(getContext());
+                        SharedPreferences.Editor editor = shared.edit();
+                        editor.putString("connectedUserName", user.getNom());
+                        editor.putString("connectedUserForname", user.getPrenom());
+                        editor.putString("connectedUserMail", user.getEmail());
+                        editor.putString("connectedUserPassword", user.getPass());
+                        editor.putString("connectedUserLogin", user.getLogin());
+                        editor.putInt("connectedUserIdRole", user.getIdRole());
+                        editor.putInt("connectedUserNbrBonScore", user.getNbrBonScore());
+                        editor.putInt("connectedUserId", user.getId());
+                        editor.commit();
 
-                    u.setPrenom(profile.getFirstName());
-                    u.setNom(profile.getLastName());
-                    u.setIdRole(1);
-                    u.setNbrBonScore(0);
-                    u.setLogin(profile.getFirstName() + "." + profile.getLastName());
-                    u.setPass("test");
-
+                        FragmentManager manager = getActivity().getSupportFragmentManager();
+                        manager.beginTransaction().replace(R.id.content_nav, new disconnect_frag()).commit();
+                    }else {
+                        Intent i = new Intent();
+                        i.putExtra("nom",Profile.getCurrentProfile().getName());
+                        i.putExtra("prenom",Profile.getCurrentProfile().getFirstName());
+                        i.putExtra("idFacebook",idFacebook);
+                        startActivity(i);
+                    }
 
                 }
 
