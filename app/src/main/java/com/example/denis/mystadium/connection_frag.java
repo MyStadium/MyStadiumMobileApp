@@ -77,7 +77,7 @@ public class connection_frag extends android.support.v4.app.Fragment{
             }
         });
 
-        loginButton = (LoginButton) myView.findViewById(R.id.login_button);
+        /*loginButton = (LoginButton) myView.findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList("public_profile","user_friends") );
         loginButton.setFragment(this);
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email"));
@@ -133,7 +133,7 @@ public class connection_frag extends android.support.v4.app.Fragment{
 
                 }
             });
-
+        */
         btnInscription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
