@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.denis.mystadium.Model.Equipe;
 import com.example.denis.mystadium.Model.InfoEquipe;
 
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,27 @@ public class HttpManagerEquipe extends AsyncTask<Integer, Void, InfoEquipe>{
             ResponseEntity<InfoEquipe[]> responseEntity =  manager.getTemplate().getForEntity(manager.getRestUrl()+"/utilisateur/"+params[0]+"/favorite", InfoEquipe[].class);
             List<InfoEquipe> liste =  new ArrayList<InfoEquipe>(Arrays.asList( responseEntity.getBody()));
             return liste;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public List<InfoEquipe> getClassementForChampionnat (int idChampionnat) throws Exception{
+        try {
+            HttpManager manager = new HttpManager();
+            ResponseEntity<InfoEquipe[]> responseEntity =  manager.getTemplate().getForEntity(manager.getRestUrl()+"/championnat/"+idChampionnat+"/classement", InfoEquipe[].class);
+            List<InfoEquipe> liste =  new ArrayList<InfoEquipe>(Arrays.asList( responseEntity.getBody()));
+            return liste;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public InfoEquipe getEquipeById (int id) throws Exception{
+        try {
+            HttpManager manager = new HttpManager();
+            InfoEquipe e = manager.getTemplate().getForObject(manager.getRestUrl()+"/equipe/infoEquipeId/"+id, InfoEquipe.class);
+            return e;
         } catch (Exception e) {
             throw e;
         }
