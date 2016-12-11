@@ -63,7 +63,7 @@ public class InscriptionActivity extends AppCompatActivity {
 
         if(pass.equals(passconf)){
             if(formIsFilled(nom, prenom, login, mail, pass, passconf)){
-                Utilisateur user = new Utilisateur(1, nom, prenom, login, pass, mail, 0, 1);
+                Utilisateur user = new Utilisateur(1, nom, prenom, login, pass, mail, 0, 1,null);
                 try{
                     HttpManagerUtilisateur manager = new HttpManagerUtilisateur();
                     manager.addUser(user);

@@ -57,6 +57,20 @@ public class HttpManagerUtilisateur extends AsyncTask<String, Void, Utilisateur>
             return null;
         }
     }
+    public Utilisateur getUserByIdFacebook (String... params) {
+        try {
+            final String url = "http://192.168.128.13:8081/MyStadium-REST-DEVILLE-BRONSART/resources/utilisateur/idFacebook/"+params[0];
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+            Utilisateur user = restTemplate.getForObject(url, Utilisateur.class);
+            return user;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("MainActivity", e.getMessage(), e);
+            return null;
+        }
+    }
 
     public void updateUser (Utilisateur u) throws Exception{
         try {
