@@ -109,12 +109,13 @@ public class connection_frag extends android.support.v4.app.Fragment{
                         editor.putInt("connectedUserIdRole", user.getIdRole());
                         editor.putInt("connectedUserNbrBonScore", user.getNbrBonScore());
                         editor.putInt("connectedUserId", user.getId());
+                        editor.putString("connectedUserFacebookId",user.getIdFacebook());
                         editor.commit();
 
                         FragmentManager manager = getActivity().getSupportFragmentManager();
                         manager.beginTransaction().replace(R.id.content_nav, new disconnect_frag()).commit();
                     }else {
-                        Intent i = new Intent();
+                        Intent i = new Intent(getContext(),InscriptionFacebookActivity.class);
                         i.putExtra("nom",Profile.getCurrentProfile().getName());
                         i.putExtra("prenom",Profile.getCurrentProfile().getFirstName());
                         i.putExtra("idFacebook",idFacebook);

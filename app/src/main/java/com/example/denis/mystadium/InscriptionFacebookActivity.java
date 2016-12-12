@@ -58,7 +58,12 @@ public class InscriptionFacebookActivity extends AppCompatActivity {
             user.setIdFacebook(savedInstanceState.getString("idFacebook"));
 
         }
-
+        btnValider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnValiderClick();
+            }
+        });
     }
 
     public void btnValiderClick(){

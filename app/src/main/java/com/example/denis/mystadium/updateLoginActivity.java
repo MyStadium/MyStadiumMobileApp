@@ -59,7 +59,7 @@ public class updateLoginActivity extends AppCompatActivity {
         String mail = txtMail.getText().toString().trim();
         String login = pref.getString("connectedUserLogin", "");
         String pass = pref.getString("connectedUserPassword", "");
-        Utilisateur connectedUser = new Utilisateur(id, nom, prenom, login, pass, mail, nbrBonScore, idRole);
+        Utilisateur connectedUser = new Utilisateur(id, nom, prenom, login, pass, mail, nbrBonScore, idRole,null);
         try{
             httpUtilisateurManager.updateUser(connectedUser);
             SharedPreferences.Editor edit = pref.edit();

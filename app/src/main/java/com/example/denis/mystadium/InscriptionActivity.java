@@ -63,7 +63,7 @@ public class InscriptionActivity extends AppCompatActivity {
 
         if(pass.equals(passconf)){
             if(formIsFilled(nom, prenom, login, mail, pass, passconf)){
-                Utilisateur user = new Utilisateur(1, nom, prenom, login, pass, mail, 0, 1,null);
+                Utilisateur user = new Utilisateur(1, nom, prenom, login, pass, mail, 0, 1,"0");
                 try{
                     HttpManagerUtilisateur manager = new HttpManagerUtilisateur();
                     manager.addUser(user);
@@ -77,6 +77,7 @@ public class InscriptionActivity extends AppCompatActivity {
                     editor.putInt("connectedUserNbrBonScore", user.getNbrBonScore());
                     Utilisateur userConnected = manager.getUserByMail(mail);
                     editor.putInt("connectedUserId", userConnected.getId());
+                    editor.putString("connectedUserFacebookId",userConnected.getIdFacebook());
                     editor.commit();
 
                     FragmentManager fragManager = getSupportFragmentManager();
