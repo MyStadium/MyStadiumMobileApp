@@ -48,7 +48,8 @@
             android:layout_below="@+id/txtDateTime"
             android:layout_centerHorizontal="true"
             android:textSize="45px"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textColor="#FE0101" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
