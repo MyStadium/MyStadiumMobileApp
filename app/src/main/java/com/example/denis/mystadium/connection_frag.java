@@ -80,9 +80,7 @@ public class connection_frag extends android.support.v4.app.Fragment{
         loginButton = (LoginButton) myView.findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList("public_profile","user_friends") );
         loginButton.setFragment(this);
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email"));
-
-            loginButton.registerCallback(mCallBackManager, new FacebookCallback<LoginResult>() {
+        loginButton.registerCallback(mCallBackManager, new FacebookCallback<LoginResult>() {
 
                 @Override
                 public void onSuccess(LoginResult loginResult) {
@@ -90,13 +88,7 @@ public class connection_frag extends android.support.v4.app.Fragment{
                     Profile profile = Profile.getCurrentProfile();
 
 
-                    GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
-                        @Override
-                        public void onCompleted(JSONObject object, GraphResponse response) {
-                                    idFacebook = object.optString("id");
-                        }
-                    });
-                    request.executeAsync();
+                    idFacebook = profile.getId();
                     user = requestUser.getUserByIdFacebook(idFacebook);
                     if( user != null){
                         SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(getContext());

@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+
 /**
  * Created by denis on 02-12-16.
  */
@@ -45,7 +48,7 @@ public class disconnect_frag extends Fragment {
         txtProfilNom = (TextView)myView.findViewById(R.id.txtProfilNom);
         txtProfilPrenom = (TextView)myView.findViewById(R.id.txtProfilPrenom);
         txtProfilMail = (TextView)myView.findViewById(R.id.txtProfilMail);
-
+        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
         btnModify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,7 +80,7 @@ public class disconnect_frag extends Fragment {
         editor.commit();
 
         txtConnected.setText("Aucun utilisateur connecté");
-
+        LoginManager.getInstance().logOut();
         FragmentManager manager = this.getActivity().getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.content_nav, new connection_frag()).commit();
     }

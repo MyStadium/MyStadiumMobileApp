@@ -21,15 +21,18 @@ import com.example.denis.mystadium.Model.AvgVote;
 import com.example.denis.mystadium.Model.InfoMedia;
 import com.example.denis.mystadium.Model.InfoRencontre;
 import com.example.denis.mystadium.Model.Media;
+import com.example.denis.mystadium.Model.Score;
 import com.example.denis.mystadium.Model.Vote;
 import com.example.denis.mystadium.Request.HttpManagerMedia;
 import com.example.denis.mystadium.Request.HttpManagerRencontre;
+import com.example.denis.mystadium.Request.HttpManagerScore;
 import com.example.denis.mystadium.Request.HttpManagerVote;
 
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AfterMatchActivity extends AppCompatActivity {
@@ -74,6 +77,7 @@ public class AfterMatchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_after_match);
+
 
         if (savedInstanceState == null) {
             Bundle extra = getIntent().getExtras();
@@ -123,6 +127,13 @@ public class AfterMatchActivity extends AppCompatActivity {
             }
         });
 
+        btnAddScore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnAddScoreClicked();
+            }
+        });
+
         spinnerDomicile = (Spinner)findViewById(R.id.spinnerScoreDomicile);
         spinnerExterieur = (Spinner)findViewById(R.id.spinnerScoreExterieur);
 
@@ -166,7 +177,7 @@ public class AfterMatchActivity extends AppCompatActivity {
 
 
 
-        final SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
+
         ambianceRate = (RatingBar)convertView.findViewById(R.id.ratingAmbiance);
         niveauRate = (RatingBar)convertView.findViewById(R.id.ratingNiveau);
         fairplayRate = (RatingBar)convertView.findViewById(R.id.ratingFairplay);
@@ -185,6 +196,7 @@ public class AfterMatchActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         try{
+                            SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                             final Vote v = new Vote((int)niveauRate.getRating(), (int)fairplayRate.getRating(), (int)ambianceRate.getRating(), shared.getInt("connectedUserId", 0), rencontre.getIdRencontre());
                             httpVoteManager.postVote(v);
                             Toast.makeText(getApplicationContext(), "Merci pour votre vote !", Toast.LENGTH_SHORT).show();
@@ -209,6 +221,21 @@ public class AfterMatchActivity extends AppCompatActivity {
             txtNiveau.setText("Niveau: "+((int) avgVote.getNiveau())+"/5");
         }catch(Exception e){
             Toast.makeText(getApplicationContext(), "Impossible de rafraichir les votes", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void btnAddScoreClicked(){
+        HttpManagerScore httpScoreManager = new HttpManagerScore();
+        SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        int scoreDomicile = domicileAdpater.getItem(spinnerDomicile.getSelectedItemPosition());
+        int scoreExterieur = exterieurAdpater.getItem(spinnerExterieur.getSelectedItemPosition());
+        Date date = new Date();
+        int userID = shared.getInt("connectedUserId", 0);
+        Score s = new Score(1, scoreDomicile, scoreExterieur, date, false, selectedRencontreId, userID);
+        try{
+            httpScoreManager.postVote(s);
+        }catch(Exception e){
+            Toast.makeText(getApplicationContext(), "Impossible d'envoyer votre score", Toast.LENGTH_SHORT).show();
         }
     }
 }
