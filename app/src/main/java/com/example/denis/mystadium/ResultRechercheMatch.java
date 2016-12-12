@@ -14,7 +14,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.denis.mystadium.Model.InfoRencontre;
+import com.example.denis.mystadium.Model.Sport;
 import com.example.denis.mystadium.Request.HttpManagerRencontre;
+import com.example.denis.mystadium.Request.HttpManagerSport;
 
 import java.util.Collections;
 import java.util.Date;
@@ -68,9 +70,11 @@ public class ResultRechercheMatch extends ListActivity {
         Date now = new Date();
         InfoRencontre r = rencontreList.get(pos);
         Intent intent;
+
+
+
         if(r.getDateHeure().compareTo(now) > 0){
             intent = new Intent(this, BeforeMatchActivity.class);
-            Toast.makeText(getApplicationContext(), "Le match n'a pas encore commencé", Toast.LENGTH_SHORT).show();
         }else{
             intent = new Intent(this, AfterMatchActivity.class);
         }

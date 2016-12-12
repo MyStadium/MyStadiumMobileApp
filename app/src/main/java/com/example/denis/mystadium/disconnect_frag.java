@@ -32,16 +32,15 @@ public class disconnect_frag extends Fragment {
     private TextView txtProfilPrenom;
     private TextView txtProfilMail;
 
-    private SharedPreferences shared;
+    private SharedActivity shared;
 
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        shared = new SharedActivity(getContext());
         myView = inflater.inflate(R.layout.disconnection, container, false);
-        shared = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-        SharedPreferences.Editor editor = shared.edit();
         btnDisconnect = (Button)myView.findViewById(R.id.btnDisconnect);
         btnModify = (Button)myView.findViewById(R.id.btnModify);
         txtConnected = (TextView)myView.findViewById(R.id.txtConnected);
@@ -57,9 +56,9 @@ public class disconnect_frag extends Fragment {
         });
 
         txtConnected.setText("Connecté en tant que: ");
-        txtProfilNom.setText(shared.getString("connectedUserName", ""));
-        txtProfilPrenom.setText(shared.getString("connectedUserForname", ""));
-        txtProfilMail.setText(shared.getString("connectedUserMail", ""));
+        txtProfilNom.setText(shared.getConnectedUserName());
+        txtProfilPrenom.setText(shared.getConnectedUserForname());
+        txtProfilMail.setText(shared.getConnectedUserMail());
         btnDisconnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,13 +70,7 @@ public class disconnect_frag extends Fragment {
 
 
     public void disconnectUser(){
-        SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(getContext());
-        SharedPreferences.Editor editor = shared.edit();
-        editor.putString("connectedUserName", "");
-        editor.putString("connectedUserForname", "");
-        editor.putString("connectedUserMail", "");
-        editor.putInt("connectedUserId", 0);
-        editor.commit();
+        shared.disconnectUser();
 
         txtConnected.setText("Aucun utilisateur connecté");
         LoginManager.getInstance().logOut();
@@ -92,9 +85,9 @@ public class disconnect_frag extends Fragment {
 
     @Override
     public void onStart() {
-        txtProfilNom.setText(shared.getString("connectedUserName", ""));
-        txtProfilPrenom.setText(shared.getString("connectedUserForname", ""));
-        txtProfilMail.setText(shared.getString("connectedUserMail", ""));
+        txtProfilNom.setText(shared.getConnectedUserName());
+        txtProfilPrenom.setText(shared.getConnectedUserForname());
+        txtProfilMail.setText(shared.getConnectedUserMail());
         super.onStart();
     }
 }

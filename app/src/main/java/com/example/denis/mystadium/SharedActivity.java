@@ -40,7 +40,27 @@ public class SharedActivity extends AppCompatActivity {
         editor.putString("connectedUserName", "");
         editor.putString("connectedUserForname", "");
         editor.putString("connectedUserMail", "");
+        editor.putString("connectedUserPassword","");
+        editor.putString("connectedUserLogin","");
+        editor.putInt("connectedUserIdRole", 0);
+        editor.putInt("connectedUserNbrBonScore", 0);
         editor.putInt("connectedUserId", 0);
+        editor.putString("connectedUserFacebookId","");
         editor.commit();
+    }
+
+    public int getConnectedUserId(){
+        return shared.getInt("connectedUserId", 0);
+    }
+
+    public String getConnectedUserName(){
+        return shared.getString("connectedUserName", "");
+    }
+
+    public String getConnectedUserForname(){
+        return shared.getString("connectedUserForname", "");
+    }
+    public String getConnectedUserMail(){
+        return shared.getString("connectedUserMail", "");
     }
 }
