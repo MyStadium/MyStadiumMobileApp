@@ -28,7 +28,6 @@ public class InscriptionFacebookActivity extends AppCompatActivity {
     private EditText txtPassword;
     private EditText txtPasswordConf;
     private Button btnValider;
-    private View myView;
     private Utilisateur user;
     private HttpManagerUtilisateur requestUser;
     private SharedPreferences shared;
@@ -36,11 +35,11 @@ public class InscriptionFacebookActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.inscription_facebook);
-        txtLogin = (EditText) myView.findViewById(R.id.txtLogin);
-        txtEmail = (EditText) myView.findViewById(R.id.txtEmail);
-        txtPassword = (EditText) myView.findViewById(R.id.txtPassword);
-        txtPasswordConf = (EditText) myView.findViewById(R.id.txtPasswordConf);
-        btnValider = (Button) myView.findViewById(R.id.btnValider);
+        txtLogin = (EditText) findViewById(R.id.txtLogin);
+        txtEmail = (EditText) findViewById(R.id.txtEmail);
+        txtPassword = (EditText) findViewById(R.id.txtPassword);
+        txtPasswordConf = (EditText) findViewById(R.id.txtPasswordConf);
+        btnValider = (Button) findViewById(R.id.btnValider);
         requestUser = new HttpManagerUtilisateur();
         shared = PreferenceManager.getDefaultSharedPreferences(this);
         user = new Utilisateur();
@@ -67,8 +66,8 @@ public class InscriptionFacebookActivity extends AppCompatActivity {
     }
 
     public void btnValiderClick(){
-        if(!txtEmail.equals("") && !txtLogin.equals("") && !txtPassword.equals("") && !txtPasswordConf.equals("")) {
-            if(txtPassword.equals(txtPasswordConf)) {
+        if(!txtEmail.getText().toString().equals("") && !txtLogin.getText().toString().equals("") && !txtPassword.getText().toString().equals("") && !txtPasswordConf.getText().toString().equals("")) {
+            if(txtPassword.getText().toString().equals(txtPasswordConf.getText().toString())) {
                 user.setLogin(txtLogin.getText().toString());
                 user.setPass(txtPassword.getText().toString());
                 user.setEmail(txtEmail.getText().toString());
