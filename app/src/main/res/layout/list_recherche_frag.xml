@@ -65,7 +65,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_toStartOf="@+id/txtScore"
                 android:layout_above="@+id/btnVoirMatch"
-                android:layout_marginRight="5dp" />
+                android:layout_marginRight="5dp"
+                android:textAlignment="textEnd" />
             <TextView
             android:text="Entente melen micheroux ouai ouai ouai ouai"
             android:layout_width="match_parent"
