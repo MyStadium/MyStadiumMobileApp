@@ -3,18 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:weightSum="1"
+    >
 
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="162dp"
-        android:layout_weight="0.30"
-        android:background="@drawable/resultrechercheshape">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/resultrechercheshape"
+        android:weightSum="1">
+
+
 
         <TextView
             android:text="1 janvier 10:00"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginTop="28dp"
@@ -22,59 +26,82 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:textAlignment="center" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="125dp"
+        android:background="@drawable/resultrechercheshape"
+        android:orientation="vertical"
+        android:layout_weight="0.02">
 
-        <TextView
-            android:text="Entente mELEN mICHEROUX OUAI OUAI OUAI"
-            android:layout_width="wrap_content"
+
+
+        <LinearLayout
+            android:layout_width="373dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="45dp"
-            android:id="@+id/txtEquipeDomicile"
-            android:layout_below="@+id/txtDateTime"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/txtScore"
-            android:layout_above="@+id/btnVoirMatch"
-            android:textAlignment="gravity" />
-
+            android:textAlignment="center"
+            android:orientation="horizontal">
         <TextView
             android:text="0-5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
             android:id="@+id/txtScore"
             android:layout_below="@+id/txtDateTime"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="18dp"
-            android:textSize="30px" />
+            android:textSize="45px"
+            android:textAlignment="center" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-        <TextView
+            <TextView
+                android:text="Entente mELEN mICHEROUX OUAI OUAI OUAI"
+                android:layout_width="187dp"
+                android:layout_height="match_parent"
+                android:id="@+id/txtEquipeDomicile"
+                android:layout_below="@+id/txtDateTime"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/txtScore"
+                android:layout_above="@+id/btnVoirMatch"
+                android:layout_marginRight="5dp" />
+            <TextView
             android:text="Entente melen micheroux ouai ouai ouai ouai"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:id="@+id/txtEquipeExtérieure"
             android:layout_alignParentEnd="true"
             android:layout_toEndOf="@+id/txtScore"
             android:layout_above="@+id/btnVoirMatch"
             android:layout_alignTop="@+id/txtEquipeDomicile"
-            android:textAlignment="textEnd" />
+            android:textAlignment="gravity"
+                android:layout_gravity="left"
+                android:layout_marginLeft="5dp" />
+        </LinearLayout>
+    </LinearLayout>
+
 
         <TextView
             android:text="Rue de Wonck 21 Houtain"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:id="@+id/txtAdresse"
             android:layout_alignEnd="@+id/txtEquipeExtérieure"
             android:layout_alignParentStart="true"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:layout_gravity="center_horizontal" />
 
         <Button
             android:text="Voir détails du match"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/btnVoirMatch"
             android:layout_above="@+id/txtAdresse"
+            android:layout_marginTop="5dp"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="17dp"
-            android:background="#FEFEFE"/>
-
-    </RelativeLayout>
+            android:background="#FEFEFE"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
 </LinearLayout>
