@@ -77,7 +77,7 @@ public class connection_frag extends android.support.v4.app.Fragment{
             }
         });
 
-        /*loginButton = (LoginButton) myView.findViewById(R.id.login_button);
+        loginButton = (LoginButton) myView.findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList("public_profile","user_friends") );
         loginButton.setFragment(this);
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email"));
@@ -109,12 +109,13 @@ public class connection_frag extends android.support.v4.app.Fragment{
                         editor.putInt("connectedUserIdRole", user.getIdRole());
                         editor.putInt("connectedUserNbrBonScore", user.getNbrBonScore());
                         editor.putInt("connectedUserId", user.getId());
+                        editor.putString("connectedUserFacebookId",user.getIdFacebook());
                         editor.commit();
 
                         FragmentManager manager = getActivity().getSupportFragmentManager();
                         manager.beginTransaction().replace(R.id.content_nav, new disconnect_frag()).commit();
                     }else {
-                        Intent i = new Intent();
+                        Intent i = new Intent(getContext(),InscriptionFacebookActivity.class);
                         i.putExtra("nom",Profile.getCurrentProfile().getName());
                         i.putExtra("prenom",Profile.getCurrentProfile().getFirstName());
                         i.putExtra("idFacebook",idFacebook);
@@ -133,7 +134,7 @@ public class connection_frag extends android.support.v4.app.Fragment{
 
                 }
             });
-        */
+
         btnInscription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
