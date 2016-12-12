@@ -53,11 +53,16 @@ public class connection_frag extends android.support.v4.app.Fragment{
     private LoginButton loginButton;
     private CallbackManager mCallBackManager;
     private String idFacebook;
+
+    private SharedActivity shared;
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
         mCallBackManager = CallbackManager.Factory.create();
+        shared = new SharedActivity(getContext());
     }
 
     @Nullable
@@ -91,24 +96,13 @@ public class connection_frag extends android.support.v4.app.Fragment{
                     idFacebook = profile.getId();
                     user = requestUser.getUserByIdFacebook(idFacebook);
                     if( user != null){
-                        SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(getContext());
-                        SharedPreferences.Editor editor = shared.edit();
-                        editor.putString("connectedUserName", user.getNom());
-                        editor.putString("connectedUserForname", user.getPrenom());
-                        editor.putString("connectedUserMail", user.getEmail());
-                        editor.putString("connectedUserPassword", user.getPass());
-                        editor.putString("connectedUserLogin", user.getLogin());
-                        editor.putInt("connectedUserIdRole", user.getIdRole());
-                        editor.putInt("connectedUserNbrBonScore", user.getNbrBonScore());
-                        editor.putInt("connectedUserId", user.getId());
-                        editor.putString("connectedUserFacebookId",user.getIdFacebook());
-                        editor.commit();
+                        shared.connectUser(user);
 
                         FragmentManager manager = getActivity().getSupportFragmentManager();
                         manager.beginTransaction().replace(R.id.content_nav, new disconnect_frag()).commit();
                     }else {
                         Intent i = new Intent(getContext(),InscriptionFacebookActivity.class);
-                        i.putExtra("nom",Profile.getCurrentProfile().getName());
+                        i.putExtra("nom",Profile.getCurrentProfile().getLastName());
                         i.putExtra("prenom",Profile.getCurrentProfile().getFirstName());
                         i.putExtra("idFacebook",idFacebook);
                         startActivity(i);
@@ -138,7 +132,6 @@ public class connection_frag extends android.support.v4.app.Fragment{
     }
 
     public void tryConnection(){
-        SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this.getContext());
 
         try {
             user = requestUser.tryToConnectUser(txtLogin.getText().toString(), txtPass.getText().toString());
@@ -146,17 +139,7 @@ public class connection_frag extends android.support.v4.app.Fragment{
             Toast.makeText(getContext(), "Erreur lors de l'accès au serveur", Toast.LENGTH_SHORT).show();
         }
         if(user != null){
-            SharedPreferences.Editor editor = shared.edit();
-            editor.putString("connectedUserName", user.getNom());
-            editor.putString("connectedUserForname", user.getPrenom());
-            editor.putString("connectedUserMail", user.getEmail());
-            editor.putString("connectedUserPassword", user.getPass());
-            editor.putString("connectedUserLogin", user.getLogin());
-            editor.putInt("connectedUserIdRole", user.getIdRole());
-            editor.putInt("connectedUserNbrBonScore", user.getNbrBonScore());
-            editor.putInt("connectedUserId", user.getId());
-            editor.commit();
-
+            shared.connectUser(user);
             FragmentManager manager = this.getActivity().getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.content_nav, new disconnect_frag()).commit();
         }else{

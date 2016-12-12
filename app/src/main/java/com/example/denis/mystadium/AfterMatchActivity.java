@@ -72,13 +72,15 @@ public class AfterMatchActivity extends AppCompatActivity {
     private int selectedRencontreId;
     private AvgVote avgVote;
 
+    private SharedActivity shared;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_after_match);
 
-
+        shared = new SharedActivity(this);
         if (savedInstanceState == null) {
             Bundle extra = getIntent().getExtras();
             if(extra != null){
@@ -196,8 +198,7 @@ public class AfterMatchActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         try{
-                            SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                            final Vote v = new Vote((int)niveauRate.getRating(), (int)fairplayRate.getRating(), (int)ambianceRate.getRating(), shared.getInt("connectedUserId", 0), rencontre.getIdRencontre());
+                            final Vote v = new Vote((int)niveauRate.getRating(), (int)fairplayRate.getRating(), (int)ambianceRate.getRating(), shared.getConnectedUserId(), rencontre.getIdRencontre());
                             httpVoteManager.postVote(v);
                             Toast.makeText(getApplicationContext(), "Merci pour votre vote !", Toast.LENGTH_SHORT).show();
                             refreshAvgVote();
@@ -226,11 +227,10 @@ public class AfterMatchActivity extends AppCompatActivity {
 
     public void btnAddScoreClicked(){
         HttpManagerScore httpScoreManager = new HttpManagerScore();
-        SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         int scoreDomicile = domicileAdpater.getItem(spinnerDomicile.getSelectedItemPosition());
         int scoreExterieur = exterieurAdpater.getItem(spinnerExterieur.getSelectedItemPosition());
         Date date = new Date();
-        int userID = shared.getInt("connectedUserId", 0);
+        int userID = shared.getConnectedUserId();
         Score s = new Score(1, scoreDomicile, scoreExterieur, date, false, selectedRencontreId, userID);
         try{
             httpScoreManager.postVote(s);

@@ -13,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.denis.mystadium.Model.InfoRencontre;
+import com.example.denis.mystadium.Model.Sport;
+import com.example.denis.mystadium.Request.HttpManagerSport;
 
 import java.util.Date;
 import java.util.List;
@@ -23,9 +25,12 @@ import java.util.List;
 
 public class ResultListAdaptateur extends ArrayAdapter<InfoRencontre> {
 
+    private HttpManagerSport httpSportManager;
+
 
     public ResultListAdaptateur(Context context, List<InfoRencontre> objects) {
         super(context, 0,objects);
+        httpSportManager = new HttpManagerSport();
     }
 
 
@@ -55,9 +60,17 @@ public class ResultListAdaptateur extends ArrayAdapter<InfoRencontre> {
                     Date now = new Date();
                     InfoRencontre r = getItem(position);
                     Intent intent;
+
+                    Sport s;
+                    try{
+                        s = httpSportManager.getSportFromRencontre(r.getIdRencontre());
+                        Toast.makeText(getContext(), "Durée du match:"+s.getTempsPeriode(), Toast.LENGTH_SHORT).show();
+                    }catch(Exception e){
+                        Toast.makeText(getContext(), "Erreur lors de la récupération du sport", Toast.LENGTH_SHORT).show();
+                    }
+
                     if(r.getDateHeure().compareTo(now) > 0){
                         intent = new Intent(view.getContext(), BeforeMatchActivity.class);
-                        Toast.makeText(getContext().getApplicationContext(), "Le match n'a pas encore commencé", Toast.LENGTH_SHORT).show();
                     }else{
                         intent = new Intent(getContext(), AfterMatchActivity.class);
                     }
