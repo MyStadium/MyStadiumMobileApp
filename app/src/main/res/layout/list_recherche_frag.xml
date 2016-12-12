@@ -28,56 +28,59 @@
             android:textAlignment="center" />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="125dp"
-        android:background="@drawable/resultrechercheshape"
-        android:orientation="vertical"
-        android:layout_weight="0.02">
+        android:layout_height="73dp"
+        android:orientation="vertical">
 
 
 
-        <LinearLayout
-            android:layout_width="373dp"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:orientation="horizontal">
-        <TextView
-            android:text="0-5"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:id="@+id/txtScore"
-            android:layout_below="@+id/txtDateTime"
-            android:layout_centerHorizontal="true"
-            android:textSize="45px"
-            android:textAlignment="center"
-            android:textColor="#FE0101" />
-        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:textAlignment="center"
+            android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="1">
 
             <TextView
                 android:text="Entente mELEN mICHEROUX OUAI OUAI OUAI"
-                android:layout_width="187dp"
+                android:layout_width="103dp"
                 android:layout_height="match_parent"
                 android:id="@+id/txtEquipeDomicile"
                 android:layout_below="@+id/txtDateTime"
                 android:layout_alignParentStart="true"
                 android:layout_toStartOf="@+id/txtScore"
                 android:layout_above="@+id/btnVoirMatch"
-                android:layout_marginRight="5dp" />
+                android:layout_marginRight="5dp"
+                android:layout_weight="0.31" />
+
+            <TextView
+                android:text="0-5"
+                android:layout_width="85dp"
+                android:layout_height="34dp"
+                android:id="@+id/txtScore"
+                android:layout_below="@+id/txtDateTime"
+                android:layout_centerHorizontal="true"
+                android:textAlignment="center"
+                android:textColor="#FE0101"
+                android:layout_weight="0.54"
+                android:textSize="30dp" />
+
             <TextView
             android:text="Entente melen micheroux ouai ouai ouai ouai"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="103dp"
+            android:layout_height="69dp"
             android:id="@+id/txtEquipeExtérieure"
             android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/txtScore"
-            android:layout_above="@+id/btnVoirMatch"
+                android:layout_above="@+id/btnVoirMatch"
             android:layout_alignTop="@+id/txtEquipeDomicile"
-            android:textAlignment="gravity"
-                android:layout_gravity="left"
-                android:layout_marginLeft="5dp" />
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="right" />
+        </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
@@ -91,7 +94,8 @@
             android:layout_alignEnd="@+id/txtEquipeExtérieure"
             android:layout_alignParentStart="true"
             android:textAlignment="center"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.88" />
 
         <Button
             android:text="Voir détails du match"

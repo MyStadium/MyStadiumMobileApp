@@ -16,6 +16,8 @@ import com.example.denis.mystadium.Model.InfoRencontre;
 import com.example.denis.mystadium.Model.Sport;
 import com.example.denis.mystadium.Request.HttpManagerSport;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -45,8 +47,10 @@ public class ResultListAdaptateur extends ArrayAdapter<InfoRencontre> {
         TextView txtScore = (TextView) rowView.findViewById(R.id.txtScore);
         TextView txtAdresse = (TextView) rowView.findViewById(R.id.txtAdresse);
         Button btnVoirDetails = (Button) rowView.findViewById(R.id.btnVoirMatch);
-
-        txtDateTime.setText(getItem(position).getDateHeure().toString());
+        Date date = getItem(position).getDateHeure();
+        SimpleDateFormat format2 = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        String dateString = format2.format(date);
+        txtDateTime.setText(dateString);
         txtEquipeDomicile.setText(getItem(position).getNomEquipeDomicile());
         txtEquipeExterieur.setText(getItem(position).getNomEquipeExterieur());
         txtScore.setText(getItem(position).getScoreFinalDomicile()+"-"+getItem(position).getScoreFinalExterieur());
