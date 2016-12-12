@@ -62,17 +62,22 @@ public class ResultListAdaptateur extends ArrayAdapter<InfoRencontre> {
                     Intent intent;
 
                     Sport s;
+                    int dureeMatch = 0;
                     try{
                         s = httpSportManager.getSportFromRencontre(r.getIdRencontre());
-                        Toast.makeText(getContext(), "Durée du match:"+s.getTempsPeriode(), Toast.LENGTH_SHORT).show();
+                        dureeMatch = s.getNbrPeriodes()*s.getTempsPeriode() + 20;
+
                     }catch(Exception e){
                         Toast.makeText(getContext(), "Erreur lors de la récupération du sport", Toast.LENGTH_SHORT).show();
                     }
 
+
+
+
                     if(r.getDateHeure().compareTo(now) > 0){
                         intent = new Intent(view.getContext(), BeforeMatchActivity.class);
                     }else{
-                        intent = new Intent(getContext(), AfterMatchActivity.class);
+                        intent = new Intent(getContext(), DuringMatchActivity.class);
                     }
                     intent.putExtra("selectedRencontreId", r.getIdRencontre());
                     getContext().startActivity(intent);
