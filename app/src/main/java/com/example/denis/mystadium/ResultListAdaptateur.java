@@ -25,7 +25,7 @@ import java.util.List;
  * Created by Utilisateur on 11-12-16.
  */
 
-public class                                                        ResultListAdaptateur extends ArrayAdapter<InfoRencontre> {
+public class ResultListAdaptateur extends ArrayAdapter<InfoRencontre> {
 
     private HttpManagerSport httpSportManager;
 
@@ -81,7 +81,7 @@ public class                                                        ResultListAd
                     if(r.getDateHeure().compareTo(now) > 0){
                         intent = new Intent(view.getContext(), BeforeMatchActivity.class);
                     }else{
-                        intent = new Intent(getContext(), DuringMatchActivity.class);
+                        intent = new Intent(getContext(), AfterMatchActivity.class);
                     }
                     intent.putExtra("selectedRencontreId", r.getIdRencontre());
                     getContext().startActivity(intent);

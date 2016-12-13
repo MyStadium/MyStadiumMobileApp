@@ -11,7 +11,7 @@ public class Score {
     private int scoreDomicile;
     private int scoreExterieur;
     private Date heure;
-    //private boolean certifie;
+    // private boolean certifie;
     private int idRencontre;
     private int idUtilisateur;
 
@@ -23,6 +23,7 @@ public class Score {
         this.idScore = idScore;
         this.scoreDomicile = scoreDomicile;
         this.scoreExterieur = scoreExterieur;
+        //this.certifie = certifie;
         this.heure = heure;
         this.idRencontre = idRencontre;
         this.idUtilisateur = idUtilisateur;
@@ -112,5 +113,24 @@ public class Score {
     public void setIdUtilisateur(int idUtilisateur) {
         this.idUtilisateur = idUtilisateur;
     }
+
+
+
+    /**
+     * @return the certifie
+     */
+
+    /*
+    public boolean getCertifie() {
+        return certifie;
+    }
+
+    /**
+     * @param certifie the certifie to set
+     */
+    /*
+    public void setCertifie(boolean certifie) {
+        this.certifie = certifie;
+    }*/
 
 }
