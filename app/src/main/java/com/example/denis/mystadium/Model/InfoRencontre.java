@@ -1,11 +1,18 @@
 package com.example.denis.mystadium.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Created by e140677 on 05/12/2016.
  */
-public class InfoRencontre extends Rencontre{
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class InfoRencontre extends Rencontre implements Parcelable{
 
     private String libelleChampionnat;
     private String nomStade;
@@ -126,6 +133,51 @@ public class InfoRencontre extends Rencontre{
     public void setNomEquipeExterieur(String nomEquipeExterieur) {
         this.nomEquipeExterieur = nomEquipeExterieur;
     }
+    public InfoRencontre(Parcel in){
+        String[] data = new String[6];
+        in.readStringArray(data);
+        setIdRencontre(Integer.parseInt(data[0]));
+        setNomEquipeDomicile(data[1]);
+        setNomEquipeExterieur(data[2]);
+        setScoreFinalDomicile(Integer.parseInt(data[3]));
+        setScoreFinalExterieur(Integer.parseInt(data[4]));
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-hh-mm");
+        try{
+            Date date = format.parse(data[5]);
+            setDateHeure(date);
+        }catch(Exception e){}
 
+    }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy-hh-mm");
+        String date = format.format(getDateHeure());
+        parcel.writeStringArray(new String[]{
+                ""+getIdRencontre(),
+                getNomEquipeDomicile(),
+                getNomEquipeExterieur(),
+                ""+getScoreFinalDomicile(),
+                ""+getScoreFinalExterieur(),
+                date
+        });
+    }
+    @Override
+    public String toString(){
+        return getNomEquipeDomicile()+"  "+getScoreFinalDomicile()+" - "+getScoreFinalExterieur()+"  "+getNomEquipeExterieur() ;
+    }
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public InfoRencontre createFromParcel(Parcel in) {
+            return new InfoRencontre(in);
+        }
+
+        public InfoRencontre[] newArray(int size) {
+            return new InfoRencontre[size];
+        }
+    };
 }

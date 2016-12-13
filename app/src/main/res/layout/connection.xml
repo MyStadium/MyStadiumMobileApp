@@ -3,7 +3,7 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <TextView
-        android:text="Connection"
+        android:text="Connexion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView3"
@@ -42,16 +42,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="55dp"
         android:id="@+id/btnConnection" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="80dp"
-        android:id="@+id/txtConnection" />
-
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"
         android:layout_width="wrap_content"
@@ -60,4 +50,13 @@
         android:layout_marginTop="21dp"
         android:layout_below="@+id/btnConnection"
         android:layout_centerHorizontal="true" />
+    <Button
+        android:text="S'inscrire"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="41dp"
+        android:id="@+id/btnInscription" />
+
 </RelativeLayout>

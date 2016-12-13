@@ -1,8 +1,14 @@
 package com.example.denis.mystadium;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
+import android.icu.text.IDNA;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,11 +17,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.facebook.FacebookSdk;
+import com.example.denis.mystadium.Model.InfoMembre;
+
+import java.lang.reflect.Array;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 public class NavActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -38,7 +51,7 @@ public class NavActivity extends AppCompatActivity
         FragmentManager manager = getSupportFragmentManager();
 
         Fragment startingFragment;
-        SharedPreferences shared = getPreferences(MODE_PRIVATE);
+        SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
         if(shared.getString("connectedUserName", "").equals("") || shared.getString("connectedUserName", "") == null){
             startingFragment = new connection_frag();
         }else{
@@ -54,6 +67,24 @@ public class NavActivity extends AppCompatActivity
             StrictMode.setThreadPolicy(policy);
         }
 
+
+
+
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.example.denis.mystadium",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+                System.out.println("KeyHash:"+Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
     }
 
     @Override
@@ -97,7 +128,7 @@ public class NavActivity extends AppCompatActivity
         android.support.v4.app.Fragment myFrag = null;
 
         boolean connected = false;
-        SharedPreferences pref = getPreferences(MODE_PRIVATE);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         if(pref.getString("connectedUserName", "")!= null && !pref.getString("connectedUserName", "").equals("")){
             connected = true;
         }
@@ -139,6 +170,14 @@ public class NavActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    /*@Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        ArrayList<InfoMembre> liste;
+        liste = data.getParcelableArrayListExtra("listFavRest");
+
+    }*/
 
 
 }

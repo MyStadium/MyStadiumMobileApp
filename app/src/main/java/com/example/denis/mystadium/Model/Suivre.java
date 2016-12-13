@@ -8,6 +8,8 @@ public class Suivre {
     private int idUtilisateur;
     private int idMembre;
 
+    public Suivre(){}
+
     public Suivre(int idMembre, int idUtilisateur) {
         this.idMembre = idMembre;
         this.idUtilisateur = idUtilisateur;

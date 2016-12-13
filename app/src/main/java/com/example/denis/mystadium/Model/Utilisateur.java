@@ -18,9 +18,13 @@ public class Utilisateur {
     private int nbrBonScore;
     private int idRole;
 
+
+
+    private String idFacebook;
+
     public Utilisateur(){};
 
-    public Utilisateur (int id, String nom, String prenom, String login, String pass, String email, int nbrBonScore, int idRole){
+    public Utilisateur (int id, String nom, String prenom, String login, String pass, String email, int nbrBonScore, int idRole,String idFacebook){
         this.setId(id);
         this.setNom(nom);
         this.setPrenom(prenom);
@@ -29,6 +33,8 @@ public class Utilisateur {
         this.setEmail(email);
         this.setNbrBonScore(nbrBonScore);
         this.setIdRole(idRole);
+        this.setIdFacebook(idFacebook);
+
     }
 
 
@@ -94,5 +100,13 @@ public class Utilisateur {
 
     public void setIdRole(int idRole) {
         this.idRole = idRole;
+    }
+
+    public String getIdFacebook() {
+        return idFacebook;
+    }
+
+    public void setIdFacebook(String idFacebook) {
+        this.idFacebook = idFacebook;
     }
 }
