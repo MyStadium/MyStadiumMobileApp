@@ -27,7 +27,10 @@ import com.example.denis.mystadium.Request.HttpManager;
 import com.example.denis.mystadium.Request.HttpManagerEquipe;
 import com.example.denis.mystadium.Request.HttpManagerMedia;
 import com.example.denis.mystadium.Request.HttpManagerRencontre;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 
 import org.springframework.web.client.HttpClientErrorException;
 import org.w3c.dom.Text;
@@ -65,9 +68,11 @@ public class DuringMatchActivity extends AppCompatActivity {
     private InfoRencontre rencontre;
     private InfoEquipe equipeDomicile;
     private List<InfoMedia> mediaFromRest;
+    private CallbackManager callbackManager;
+    private ShareDialog shareDialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_during_match);
         txtDate = (TextView)findViewById(R.id.txtDuringDate);
@@ -75,6 +80,10 @@ public class DuringMatchActivity extends AppCompatActivity {
         txtNomDomicile = (TextView)findViewById(R.id.txtDuringNomDomicile);
         txtNomExterieur = (TextView)findViewById(R.id.txtDuringNomExterieur);
         txtJournee = (TextView)findViewById(R.id.txtDuringJournee);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this);
 
         btnClassement = (Button)findViewById(R.id.btnDuringClassement);
         btnAddComm = (Button)findViewById(R.id.btnDuringCOmm);
@@ -134,11 +143,15 @@ public class DuringMatchActivity extends AppCompatActivity {
         btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareLinkContent content = new ShareLinkContent.Builder()
-                        .setContentTitle("MyStadium App")
-                        .setContentDescription("Salut, je suis sur les lieux de ce match!")
-                        .setContentUrl(Uri.parse("https://www.google.be"))
-                        .build();
+                if(ShareDialog.canShow(ShareLinkContent.class)){
+                    ShareLinkContent content = new ShareLinkContent.Builder()
+                            .setContentTitle("MyStadium App")
+                            .setContentDescription("Salut, je suis sur les lieux de ce match!")
+                            .setContentUrl(Uri.parse("https://www.google.be"))
+                            .build();
+
+                    shareDialog.show(content);
+                }
             }
         });
 
@@ -193,5 +206,11 @@ public class DuringMatchActivity extends AppCompatActivity {
                 });
 
         builder.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode,resultCode,data);
     }
 }
