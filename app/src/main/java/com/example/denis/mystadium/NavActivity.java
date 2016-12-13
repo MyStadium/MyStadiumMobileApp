@@ -6,12 +6,14 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.icu.text.IDNA;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,6 +23,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.denis.mystadium.Model.InfoMembre;
@@ -46,6 +50,7 @@ public class NavActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
 
         //Choose the frag to put on the screen at the beginning of the app, depending on if the user is alredy connected or not
         FragmentManager manager = getSupportFragmentManager();
@@ -112,9 +117,7 @@ public class NavActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -141,14 +144,7 @@ public class NavActivity extends AppCompatActivity
             }
         } else if (id == R.id.nav_che) {
             myFrag = new chercherMatch_frag();
-        } else if (id == R.id.nav_pro) {
-            if(connected){
-                myFrag = new profil_frag();
-            }else{
-                myFrag = new connection_frag();
-                Toast.makeText(getApplicationContext(), "Vous devez être connecté pour afficher votre profil", Toast.LENGTH_LONG).show();
-            }
-        } else if (id == R.id.nav_equ) {
+        }  else if (id == R.id.nav_equ) {
             if(connected){
                 myFrag = new equipes_frag();
             }else{
