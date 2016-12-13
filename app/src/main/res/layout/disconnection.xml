@@ -25,9 +25,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txtProfilMail"
-        android:layout_alignBaseline="@+id/textView11"
+        android:layout_alignBaseline="@+id/txtVide"
         android:layout_marginTop="50dp"
-        android:layout_alignBottom="@+id/textView11"
+        android:layout_alignBottom="@+id/txtVide"
         android:layout_alignStart="@+id/txtProfilNom" />
 
     <Button
@@ -71,7 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txtProfilNom"
-        android:layout_above="@+id/textView11"
+        android:layout_above="@+id/txtVide"
         android:layout_alignStart="@+id/txtProfilPrenom" />
 
     <TextView
@@ -79,7 +79,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="54dp"
-        android:id="@+id/textView11"
+        android:id="@+id/txtVide"
         android:layout_below="@+id/textView10"
         android:layout_alignStart="@+id/textView10" />
 
@@ -89,7 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:id="@+id/txtView"
-        android:layout_below="@+id/textView11"
+        android:layout_below="@+id/txtVide"
         android:layout_alignEnd="@+id/textView10" />
 
     <TextView
