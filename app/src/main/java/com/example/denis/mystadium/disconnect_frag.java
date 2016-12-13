@@ -31,6 +31,7 @@ public class disconnect_frag extends Fragment {
     private TextView txtProfilNom;
     private TextView txtProfilPrenom;
     private TextView txtProfilMail;
+    private TextView txtProfilLogin;
 
     private SharedActivity shared;
 
@@ -46,6 +47,7 @@ public class disconnect_frag extends Fragment {
         txtConnected = (TextView)myView.findViewById(R.id.txtConnected);
         txtProfilNom = (TextView)myView.findViewById(R.id.txtProfilNom);
         txtProfilPrenom = (TextView)myView.findViewById(R.id.txtProfilPrenom);
+        txtProfilLogin = (TextView)myView.findViewById(R.id.txtProfilLogin);
         txtProfilMail = (TextView)myView.findViewById(R.id.txtProfilMail);
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
         btnModify.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +61,7 @@ public class disconnect_frag extends Fragment {
         txtProfilNom.setText(shared.getConnectedUserName());
         txtProfilPrenom.setText(shared.getConnectedUserForname());
         txtProfilMail.setText(shared.getConnectedUserMail());
+        txtProfilLogin.setText(shared.getConnectedUserLogin());
         btnDisconnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,6 +91,7 @@ public class disconnect_frag extends Fragment {
         txtProfilNom.setText(shared.getConnectedUserName());
         txtProfilPrenom.setText(shared.getConnectedUserForname());
         txtProfilMail.setText(shared.getConnectedUserMail());
+        txtProfilLogin.setText(shared.getConnectedUserLogin());
         super.onStart();
     }
 }

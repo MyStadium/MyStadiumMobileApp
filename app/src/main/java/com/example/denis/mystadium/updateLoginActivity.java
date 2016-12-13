@@ -19,6 +19,7 @@ public class updateLoginActivity extends AppCompatActivity {
     private EditText txtPrenom;
     private EditText txtNom;
     private EditText txtMail;
+    private EditText txtLogin;
     private SharedPreferences pref;
     private Button btnValidateUpdate;
     private HttpManagerUtilisateur httpUtilisateurManager;
@@ -34,11 +35,13 @@ public class updateLoginActivity extends AppCompatActivity {
         txtPrenom = (EditText)findViewById(R.id.editPrenom);
         txtNom = (EditText)findViewById(R.id.editNom);
         txtMail = (EditText)findViewById(R.id.editMail);
+        txtLogin = (EditText)findViewById(R.id.editLogin);
         btnValidateUpdate = (Button) findViewById(R.id.btnValidateUpdate);
 
         txtPrenom.setText(pref.getString("connectedUserForname", ""));
         txtNom.setText(pref.getString("connectedUserName", ""));
         txtMail.setText(pref.getString("connectedUserMail", ""));
+        txtLogin.setText(pref.getString("connectedUserLogin", ""));
 
         btnValidateUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,28 +60,43 @@ public class updateLoginActivity extends AppCompatActivity {
         String nom = txtNom.getText().toString().trim();
         String prenom = txtPrenom.getText().toString().trim();
         String mail = txtMail.getText().toString().trim();
-        String login = pref.getString("connectedUserLogin", "");
+        String login = txtLogin.getText().toString().trim();
         String pass = pref.getString("connectedUserPassword", "");
-        Utilisateur connectedUser = new Utilisateur(id, nom, prenom, login, pass, mail, nbrBonScore, idRole, pref.getString("connectedUserIdFacebook", ""));
-        try{
-            httpUtilisateurManager.updateUser(connectedUser);
-            SharedPreferences.Editor edit = pref.edit();
-            edit.putInt("connectedUserId", id);
-            edit.putInt("connectedUserIdRole", idRole);
-            edit.putInt("connectedUserNbrBonScore", nbrBonScore);
-            edit.putString("connectedUserName", nom);
-            edit.putString("connectedUserForname", prenom);
-            edit.putString("connectedUserMail", mail);
-            edit.putString("connectedUserLogin",login);
-            edit.putString("connectedUserPassword", pass);
-            edit.commit();
-            onBackPressed();
-        }catch(HttpClientErrorException e){
-            Toast.makeText(this, "L'adresse mail ou le login sont déjà utilisés", Toast.LENGTH_LONG).show();
-        }
-        catch(Exception e){
-            Toast.makeText(this, "Erreur lors de la connexion au serveur", Toast.LENGTH_LONG).show();
+        if(formIsFilled(nom, prenom, mail, login)){
+            Utilisateur connectedUser = new Utilisateur(id, nom, prenom, login, pass, mail, nbrBonScore, idRole, pref.getString("connectedUserIdFacebook", ""));
+            try{
+                httpUtilisateurManager.updateUser(connectedUser);
+                SharedPreferences.Editor edit = pref.edit();
+                edit.putInt("connectedUserId", id);
+                edit.putInt("connectedUserIdRole", idRole);
+                edit.putInt("connectedUserNbrBonScore", nbrBonScore);
+                edit.putString("connectedUserName", nom);
+                edit.putString("connectedUserForname", prenom);
+                edit.putString("connectedUserMail", mail);
+                edit.putString("connectedUserLogin",login);
+                edit.putString("connectedUserPassword", pass);
+                edit.commit();
+                onBackPressed();
+            }catch(HttpClientErrorException e){
+                Toast.makeText(this, "L'adresse mail ou le login sont déjà utilisés", Toast.LENGTH_LONG).show();
+            }
+            catch(Exception e){
+                Toast.makeText(this, "Erreur lors de la connexion au serveur", Toast.LENGTH_LONG).show();
+            }
+        }else{
+            Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_LONG).show();
         }
 
+
+    }
+
+    public boolean formIsFilled(String... params){
+        boolean filled = true;
+        for(int i = 0; i < params.length; i++){
+            if(params[i].length() == 0){
+                return false;
+            }
+        }
+        return true;
     }
 }

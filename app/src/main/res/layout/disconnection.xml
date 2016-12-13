@@ -12,19 +12,10 @@
         android:id="@+id/textView10" />
 
     <TextView
-        android:text="Email:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="61dp"
-        android:id="@+id/textView11"
-        android:layout_below="@+id/textView10"
-        android:layout_alignStart="@+id/textView10" />
-
-    <TextView
         android:text="Connecté en tant que:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="50dp"
         android:id="@+id/txtConnected"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
@@ -33,38 +24,11 @@
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txtProfilNom"
-        android:layout_above="@+id/textView11"
-        android:layout_toEndOf="@+id/textView9" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/txtProfilMail"
         android:layout_alignBaseline="@+id/textView11"
+        android:layout_marginTop="50dp"
         android:layout_alignBottom="@+id/textView11"
         android:layout_alignStart="@+id/txtProfilNom" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtProfilPrenom"
-        android:layout_alignBaseline="@+id/textView9"
-        android:layout_alignBottom="@+id/textView9"
-        android:layout_toEndOf="@+id/textView9"
-        android:layout_marginStart="20dp" />
-
-    <TextView
-        android:text="Prénom:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="39dp"
-        android:id="@+id/textView9"
-        android:layout_below="@+id/txtConnected"
-        android:layout_alignParentStart="true" />
 
     <Button
         android:text="Deconnecter"
@@ -82,5 +46,59 @@
         android:layout_above="@+id/btnDisconnect"
         android:layout_centerHorizontal="true"
         android:id="@+id/btnModify" />
+
+    <TextView
+        android:text="Prénom:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="30dp"
+        android:id="@+id/textView9"
+        android:layout_below="@+id/txtConnected"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtProfilPrenom"
+        android:layout_alignBaseline="@+id/textView9"
+        android:layout_alignBottom="@+id/textView9"
+        android:layout_alignStart="@+id/txtConnected" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtProfilNom"
+        android:layout_above="@+id/textView11"
+        android:layout_alignStart="@+id/txtProfilPrenom" />
+
+    <TextView
+        android:text="Email:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="54dp"
+        android:id="@+id/textView11"
+        android:layout_below="@+id/textView10"
+        android:layout_alignStart="@+id/textView10" />
+
+    <TextView
+        android:text="Login:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:id="@+id/txtView"
+        android:layout_below="@+id/textView11"
+        android:layout_alignEnd="@+id/textView10" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="68dp"
+        android:layout_alignTop="@+id/txtProfilMail"
+        android:layout_alignStart="@+id/txtProfilMail"
+        android:id="@+id/txtProfilLogin" />
 
 </RelativeLayout>
