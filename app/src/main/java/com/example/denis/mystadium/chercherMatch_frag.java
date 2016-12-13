@@ -95,25 +95,29 @@ public class chercherMatch_frag extends android.support.v4.app.Fragment {
                 @Override
                 public void onClick(View v) {
                     if(!dateDebut.equals("") && !dateFin.equals("") && !nbKilometre.getText().toString().equals("")) {
-                        try {
-                            if (gps.canGetlocation()) {
-                                String nbKilometreString = nbKilometre.getText().toString();
-                                double latitude = gps.getLatitude();
-                                double longitude = gps.getLongitude();
-                                Intent i = new Intent(getContext(), ResultRechercheMatch.class);
-                                i.putExtra("latitude", latitude);
-                                i.putExtra("longitude", longitude);
-                                i.putExtra("dateDebut", dateDebut);
-                                i.putExtra("dateFin", dateFin);
-                                i.putExtra("nbKilometre", nbKilometreString);
-                                startActivity(i);
+                        if(dateDebut.equals(dateFin)){
+                            Toast.makeText(getContext(), "Veuillez ne pas choisir de dates identiques", Toast.LENGTH_SHORT).show();
+                        }else {
+                            try {
+                                if (gps.canGetlocation()) {
+                                    String nbKilometreString = nbKilometre.getText().toString();
+                                    double latitude = gps.getLatitude();
+                                    double longitude = gps.getLongitude();
+                                    Intent i = new Intent(getContext(), ResultRechercheMatch.class);
+                                    i.putExtra("latitude", latitude);
+                                    i.putExtra("longitude", longitude);
+                                    i.putExtra("dateDebut", dateDebut);
+                                    i.putExtra("dateFin", dateFin);
+                                    i.putExtra("nbKilometre", nbKilometreString);
+                                    startActivity(i);
 
-                            } else {
-                                gps.showSettingAlert();
+                                } else {
+                                    gps.showSettingAlert();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Log.e("MainActivity", e.getMessage(), e);
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Log.e("MainActivity", e.getMessage(), e);
                         }
                     }else{
                         Toast.makeText(getContext(), "Veuillez compléter tout les champs", Toast.LENGTH_SHORT).show();
@@ -128,7 +132,7 @@ public class chercherMatch_frag extends android.support.v4.app.Fragment {
                         @Override
                         public void onDateSet(DatePicker view,int year,int month,int day){
                             datePickerFin.setText(""+day+"-"+(month+1)+"-"+year);
-                            dateFin= year+"-"+(month+1)+"-"+day;
+                            dateFin= year+"-"+(month+1)+"-"+(day);
                         }
                     };
                     newFragment.show(fm,"datePickerFin");

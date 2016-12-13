@@ -67,6 +67,7 @@ public class DuringMatchActivity extends AppCompatActivity {
 
     private InfoRencontre rencontre;
     private InfoEquipe equipeDomicile;
+    private InfoEquipe equipeExterieur;
     private List<InfoMedia> mediaFromRest;
     private CallbackManager callbackManager;
     private ShareDialog shareDialog;
@@ -108,6 +109,7 @@ public class DuringMatchActivity extends AppCompatActivity {
         try{
             rencontre = httpRencontreManager.getInfoRencontreById(selectedRencontreId);
             equipeDomicile = httpEquipeManager.getEquipeById(rencontre.getIdEquipeDomicile());
+            equipeExterieur =  httpEquipeManager.getEquipeById(rencontre.getIdEquipeExterieur());
             SimpleDateFormat format = new SimpleDateFormat("EE dd/MM/yyyy hh:mm");
             String dateHeure = format.format(rencontre.getDateHeure());
             txtDate.setText(dateHeure);
@@ -146,7 +148,7 @@ public class DuringMatchActivity extends AppCompatActivity {
                 if(ShareDialog.canShow(ShareLinkContent.class)){
                     ShareLinkContent content = new ShareLinkContent.Builder()
                             .setContentTitle("MyStadium App")
-                            .setContentDescription("Salut, je suis sur les lieux de ce match!")
+                            .setContentDescription("Salut, je regarde le match "+ equipeDomicile.getNomClub() +" - "+ equipeExterieur.getNomClub()+" dans la catégorie :"+equipeDomicile.getCategorieAge())
                             .setContentUrl(Uri.parse("https://www.google.be"))
                             .build();
 

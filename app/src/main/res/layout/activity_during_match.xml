@@ -87,6 +87,7 @@
         android:id="@+id/textView26"
         android:layout_below="@+id/txtDuringJournee"
         android:gravity="center" />
+
     <com.facebook.share.widget.ShareButton
         android:id="@+id/share_btn"
         android:layout_width="wrap_content"

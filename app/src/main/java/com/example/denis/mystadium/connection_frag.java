@@ -134,7 +134,8 @@ public class connection_frag extends android.support.v4.app.Fragment{
     public void tryConnection(){
 
         try {
-            user = requestUser.tryToConnectUser(txtLogin.getText().toString(), txtPass.getText().toString());
+            String passSha = shared.hashPassword(txtPass.getText().toString());
+            user = requestUser.tryToConnectUser(txtLogin.getText().toString(), passSha);
         }catch(Exception e){
             Toast.makeText(getContext(), "Erreur lors de l'accès au serveur", Toast.LENGTH_SHORT).show();
         }
