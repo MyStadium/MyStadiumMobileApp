@@ -75,7 +75,7 @@ public class InfoMembre extends Membre implements Parcelable{
 
     @Override
     public String toString(){
-        return getNom() + " " +getPrenom();
+        return getPrenom() + " " +getNom()+", "+getCategorieAge()+" "+getNomClub();
     }
 
     public InfoMembre(Parcel in){

@@ -233,7 +233,8 @@ public class AfterMatchActivity extends AppCompatActivity {
         int userID = shared.getConnectedUserId();
         Score s = new Score(1, scoreDomicile, scoreExterieur, date, false, selectedRencontreId, userID);
         try{
-            httpScoreManager.postVote(s);
+            httpScoreManager.postScore(s);
+            Toast.makeText(getApplicationContext(), "Merci pour votre vote", Toast.LENGTH_SHORT).show();
         }catch(Exception e){
             Toast.makeText(getApplicationContext(), "Impossible d'envoyer votre score", Toast.LENGTH_SHORT).show();
         }
