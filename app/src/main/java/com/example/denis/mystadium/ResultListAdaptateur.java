@@ -87,7 +87,6 @@ public class ResultListAdaptateur extends ArrayAdapter<InfoRencontre> {
                     }
                     intent.putExtra("selectedRencontreId", r.getIdRencontre());
                     getContext().startActivity(intent);
-
             }
         });
         return rowView;

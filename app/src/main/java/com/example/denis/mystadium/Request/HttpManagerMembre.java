@@ -38,6 +38,17 @@ public class HttpManagerMembre extends AsyncTask<Integer, Void, Membre>{
         }
     }
 
+    public List<InfoMembre> getMebersFromTeam (int id) throws Exception{
+        try {
+            HttpManager manager = new HttpManager();
+            ResponseEntity<InfoMembre[]> responseEntity =  manager.getTemplate().getForEntity(manager.getRestUrl()+"/equipe/"+id+"/compo", InfoMembre[].class);
+            List<InfoMembre> liste =  new ArrayList<InfoMembre>(Arrays.asList( responseEntity.getBody()));
+            return liste;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
     public List<InfoMembre> getFollowingPlayersList (int... params) throws Exception{
         try {
             HttpManager manager = new HttpManager();

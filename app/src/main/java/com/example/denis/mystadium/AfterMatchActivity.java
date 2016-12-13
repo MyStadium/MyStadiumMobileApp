@@ -4,11 +4,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -19,14 +21,19 @@ import android.widget.Toast;
 
 import com.example.denis.mystadium.Model.AvgVote;
 import com.example.denis.mystadium.Model.InfoMedia;
+import com.example.denis.mystadium.Model.InfoMembre;
 import com.example.denis.mystadium.Model.InfoRencontre;
 import com.example.denis.mystadium.Model.Media;
 import com.example.denis.mystadium.Model.Score;
 import com.example.denis.mystadium.Model.Vote;
+import com.example.denis.mystadium.Model.VoteMVP;
 import com.example.denis.mystadium.Request.HttpManagerMedia;
+import com.example.denis.mystadium.Request.HttpManagerMembre;
 import com.example.denis.mystadium.Request.HttpManagerRencontre;
 import com.example.denis.mystadium.Request.HttpManagerScore;
+import com.example.denis.mystadium.Request.HttpManagerSuivi;
 import com.example.denis.mystadium.Request.HttpManagerVote;
+import com.example.denis.mystadium.Request.HttpManagerVoteMVP;
 
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -73,6 +80,13 @@ public class AfterMatchActivity extends AppCompatActivity {
     private AvgVote avgVote;
 
     private SharedActivity shared;
+
+
+    private int currentlyItemSelected;
+    private int previousItemSelected;
+    private ListView listPlayers;
+    ArrayAdapter<InfoMembre> listViewAdapter;
+    private InfoMembre selectedMember;
 
 
     @Override
@@ -133,6 +147,13 @@ public class AfterMatchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 btnAddScoreClicked();
+            }
+        });
+
+        btnVote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnVoteClicked();
             }
         });
 
@@ -239,4 +260,86 @@ public class AfterMatchActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Impossible d'envoyer votre score", Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void btnVoteClicked(){
+
+
+        final SharedActivity shared = new SharedActivity(this);
+
+        List<InfoMembre> listMembersFromTeam1;
+        List<InfoMembre> listMembersFromTeam2;
+        List<InfoMembre> listMembersFromBothTeams;
+        HttpManagerMembre httpMembreManager;
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View convertView = (View) inflater.inflate(R.layout.playerlistlayout, null);
+
+        httpMembreManager = new HttpManagerMembre();
+        final HttpManagerVoteMVP httpVoteMvpManager = new HttpManagerVoteMVP();
+
+        listPlayers = (ListView) convertView.findViewById(R.id.listViewMVP);
+
+        try{
+            listMembersFromTeam1 = httpMembreManager.getMebersFromTeam(rencontre.getIdEquipeDomicile());
+            listMembersFromTeam2 = httpMembreManager.getMebersFromTeam(rencontre.getIdEquipeExterieur());
+            listMembersFromTeam1.addAll(listMembersFromTeam2);
+            listViewAdapter = new ArrayAdapter<InfoMembre>(this, android.R.layout.simple_list_item_1, listMembersFromTeam1);
+            listPlayers.setAdapter(listViewAdapter);
+            listPlayers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    onItemClickMethod(position);
+                }
+            });
+
+
+        }catch(Exception e){
+            Toast.makeText(getApplicationContext(), "Impossible de charger la liste des joueurs du match", Toast.LENGTH_SHORT).show();
+        }
+
+        convertView.setPadding(50,50,50,50);
+        builder.setView(convertView);
+        builder.setMessage("Elir MVP")
+                .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    if(selectedMember != null){
+                        VoteMVP v = new VoteMVP(shared.getConnectedUserId(), selectedMember.getId(), selectedRencontreId);
+                        try{
+                            httpVoteMvpManager.postVoteMVP(v);
+                            Toast.makeText(getApplicationContext(), "Merci pour votre vote", Toast.LENGTH_SHORT).show();
+                        }catch(HttpClientErrorException e){
+                            Toast.makeText(getApplicationContext(), "Vous avez déjà voté pour ce match", Toast.LENGTH_SHORT).show();
+                        }catch(Exception e){
+                            Toast.makeText(getApplicationContext(), "Erreur lors de l'envoie du vote", Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Veuillez sélectionner un joueur", Toast.LENGTH_SHORT).show();
+                    }
+
+                    }
+                });
+
+        builder.show();
+    }
+
+    public void onItemClickMethod(int position){
+        currentlyItemSelected = position;
+        if(previousItemSelected != -1){
+            listPlayers.getChildAt(previousItemSelected).setBackgroundColor(Color.TRANSPARENT);
+        }
+        listPlayers.getChildAt(currentlyItemSelected).setBackgroundColor(Color.CYAN);
+        selectedMember = listViewAdapter.getItem(position);
+        listViewAdapter.notifyDataSetChanged();
+        previousItemSelected = position;
+    }
+
+
 }
