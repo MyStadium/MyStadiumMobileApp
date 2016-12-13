@@ -20,11 +20,21 @@
         android:id="@+id/btnValidateUpdate" />
 
     <TextView
+        android:text="Prénom:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtUpdatePrenom"
+        android:layout_marginTop="32dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
         android:text="Mail:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView2"
-        android:layout_centerVertical="true"
+        android:layout_marginTop="38dp"
+        android:layout_below="@+id/editNom"
         android:layout_alignParentStart="true" />
 
     <EditText
@@ -36,35 +46,27 @@
         android:id="@+id/editMail"
         android:layout_alignBaseline="@+id/textView2"
         android:layout_alignBottom="@+id/textView2"
-        android:layout_toEndOf="@+id/txtUpdatePrenom" />
+        android:layout_alignStart="@+id/editNom" />
+
+    <TextView
+        android:text="Login:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView22"
+        android:layout_below="@+id/editMail"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="32dp" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
+        android:text="Name"
         android:ems="10"
-        android:id="@+id/editNom"
-        android:layout_marginTop="32dp"
-        android:layout_below="@+id/editPrenom"
-        android:layout_toEndOf="@+id/txtUpdatePrenom" />
-
-    <TextView
-        android:text="Nom:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtUpdateNom"
-        android:layout_alignBaseline="@+id/editNom"
-        android:layout_alignBottom="@+id/editNom"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:text="Prénom:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtUpdatePrenom"
-        android:layout_marginTop="32dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/editLogin"
+        android:layout_alignBaseline="@+id/textView22"
+        android:layout_alignBottom="@+id/textView22"
+        android:layout_alignStart="@+id/editMail" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -74,7 +76,26 @@
         android:id="@+id/editPrenom"
         android:layout_alignBaseline="@+id/txtUpdatePrenom"
         android:layout_alignBottom="@+id/txtUpdatePrenom"
-        android:layout_toEndOf="@+id/txtUpdatePrenom" />
+        android:layout_alignStart="@+id/btnValidateUpdate" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editNom"
+        android:layout_marginTop="23dp"
+        android:layout_below="@+id/editPrenom"
+        android:layout_alignStart="@+id/editPrenom" />
+
+    <TextView
+        android:text="Nom:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtUpdateNom"
+        android:layout_alignBaseline="@+id/editNom"
+        android:layout_alignBottom="@+id/editNom"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

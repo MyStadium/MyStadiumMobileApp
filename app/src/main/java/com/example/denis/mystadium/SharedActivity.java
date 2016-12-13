@@ -60,6 +60,8 @@ public class SharedActivity extends AppCompatActivity {
         return shared.getString("connectedUserName", "");
     }
 
+
+
     public String getConnectedUserLogin(){
         return shared.getString("connectedUserLogin", "");
     }
