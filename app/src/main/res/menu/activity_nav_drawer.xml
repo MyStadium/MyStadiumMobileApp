@@ -4,23 +4,23 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_con"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_connect"
             android:title="Connection" />
         <item
             android:id="@+id/nav_che"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_geolo"
             android:title="Chercher match" />
         <item
             android:id="@+id/nav_pro"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_profil"
             android:title="Profil" />
         <item
             android:id="@+id/nav_equ"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_equipe"
             android:title="Equipes" />
         <item
             android:id="@+id/nav_jou"
-            android:icon="@drawable/ic_menu_share"
+            android:icon="@drawable/ic_joueur"
             android:title="Joueurs" />
     </group>
 
