@@ -19,22 +19,32 @@
         <activity
             android:name=".NavActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SearchMembreActivity" />
-        <activity android:name=".SearchTeamActivity" />
-        <activity android:name=".updateLoginActivity" />
-        <activity android:name=".ResultRechercheMatch" />
-        <activity android:name=".InscriptionFacebookActivity" />
-        <activity android:name=".BeforeMatchActivity" />
-        <activity android:name=".InscriptionActivity" />
-        <activity android:name=".ClassementActivity" />
-        <activity android:name=".AfterMatchActivity" />
+        <activity android:name=".SearchMembreActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SearchTeamActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".updateLoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ResultRechercheMatch"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".InscriptionFacebookActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".BeforeMatchActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".InscriptionActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ClassementActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".AfterMatchActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
