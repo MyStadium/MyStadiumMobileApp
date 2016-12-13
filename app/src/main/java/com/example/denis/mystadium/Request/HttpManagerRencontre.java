@@ -59,6 +59,18 @@ public class HttpManagerRencontre {
         }
     }
 
+    public List<InfoRencontre> getRencontreFromSerie(int idChampionnat, int idJournee){
+        try{
+            HttpManager manager = new HttpManager();
+            ResponseEntity<InfoRencontre[]> responseEntity = manager.getTemplate().getForEntity(manager.getRestUrl()+"/rencontre/championnat/"+idChampionnat+"/journee/"+idJournee, InfoRencontre[].class);
+            List<InfoRencontre> liste = new ArrayList<InfoRencontre>(Arrays.asList(responseEntity.getBody()));
+            return liste;
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public InfoRencontre getInfoRencontreById(int id) throws Exception{
         try{
             HttpManager manager = new HttpManager();

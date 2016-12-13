@@ -15,18 +15,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.denis.mystadium.Model.InfoEquipe;
 import com.example.denis.mystadium.Model.InfoMedia;
+import com.example.denis.mystadium.Model.InfoMembre;
 import com.example.denis.mystadium.Model.InfoRencontre;
 import com.example.denis.mystadium.Model.Media;
+import com.example.denis.mystadium.Model.Score;
 import com.example.denis.mystadium.Model.Vote;
 import com.example.denis.mystadium.Request.HttpManager;
 import com.example.denis.mystadium.Request.HttpManagerEquipe;
 import com.example.denis.mystadium.Request.HttpManagerMedia;
 import com.example.denis.mystadium.Request.HttpManagerRencontre;
+import com.example.denis.mystadium.Request.HttpManagerScore;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
@@ -37,6 +41,7 @@ import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,6 +58,8 @@ public class DuringMatchActivity extends AppCompatActivity {
     private Button btnClassement;
     private Button btnAddComm;
     private Button btnShare;
+    private Button addScore;
+    private Button btnAutreMatch;
     private ListView listViewCommentaires;
 
     private HttpManagerRencontre httpRencontreManager;
@@ -72,6 +79,13 @@ public class DuringMatchActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     private ShareDialog shareDialog;
 
+
+    private Spinner spinnerScoreDomicile;
+    private Spinner spinnerScoreExterieur;
+    private ArrayAdapter<Integer> domicileAdpater;
+    private ArrayAdapter<Integer> exterieurAdpater;
+    private ArrayList<Integer> listeScore = new ArrayList<>();
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +103,8 @@ public class DuringMatchActivity extends AppCompatActivity {
         btnClassement = (Button)findViewById(R.id.btnDuringClassement);
         btnAddComm = (Button)findViewById(R.id.btnDuringCOmm);
         btnShare = (Button)findViewById(R.id.share_btn);
+        addScore = (Button)findViewById(R.id.btnDuringAddScore);
+        btnAutreMatch = (Button)findViewById(R.id.btnAUtreMatch);
 
         listViewCommentaires = (ListView)findViewById(R.id.duringListCom);
         listeCommentaires = new ArrayList<String>();
@@ -96,6 +112,18 @@ public class DuringMatchActivity extends AppCompatActivity {
         httpRencontreManager = new HttpManagerRencontre();
         httpEquipeManager = new HttpManagerEquipe();
         httpMediaManager = new HttpManagerMedia();
+
+
+        for(int i = 0; i < 150; i++){
+            listeScore.add(i);
+        }
+
+        spinnerScoreDomicile = (Spinner)findViewById(R.id.spinnerDuringDomicile);
+        spinnerScoreExterieur = (Spinner)findViewById(R.id.spinnerDuringExterieur);
+        domicileAdpater = new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, listeScore);
+        exterieurAdpater = new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, listeScore);
+        spinnerScoreDomicile.setAdapter(domicileAdpater);
+        spinnerScoreExterieur.setAdapter(exterieurAdpater);
 
         if (savedInstanceState == null) {
             Bundle extra = getIntent().getExtras();
@@ -156,6 +184,19 @@ public class DuringMatchActivity extends AppCompatActivity {
                 }
             }
         });
+        addScore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnAddScoreClicked();
+            }
+        });
+
+        btnAutreMatch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnAutreMatchClicked();
+            }
+        });
 
     }
 
@@ -171,6 +212,8 @@ public class DuringMatchActivity extends AppCompatActivity {
         final SharedActivity shared = new SharedActivity(this);
         HttpManagerMedia httmMediaManager = new HttpManagerMedia();
 
+
+
         final EditText txtCom;
 
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
@@ -178,6 +221,8 @@ public class DuringMatchActivity extends AppCompatActivity {
         View convertView = (View) inflater.inflate(R.layout.addcommlayout, null);
 
         txtCom = (EditText) convertView.findViewById(R.id.longTextFieldAddCom);
+
+
 
 
         convertView.setPadding(50, 50, 50, 50);
@@ -208,6 +253,28 @@ public class DuringMatchActivity extends AppCompatActivity {
                 });
 
         builder.show();
+    }
+
+    public void btnAddScoreClicked(){
+        SharedActivity shared = new SharedActivity(this);
+        HttpManagerScore httpScoreManager = new HttpManagerScore();
+        int scoreDomicile = domicileAdpater.getItem(spinnerScoreDomicile.getSelectedItemPosition());
+        int scoreExterieur = exterieurAdpater.getItem(spinnerScoreExterieur.getSelectedItemPosition());
+        Date date = new Date();
+        Score s = new Score(1, scoreDomicile, scoreExterieur, date, false, selectedRencontreId, shared.getConnectedUserId());
+        try{
+            httpScoreManager.postScore(s);
+            Toast.makeText(getApplicationContext(), "Merci pour votre vote", Toast.LENGTH_SHORT).show();
+        }catch(Exception e){
+            Toast.makeText(getApplicationContext(), "Impossible d'envoyer votre score", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void btnAutreMatchClicked(){
+        Intent i = new Intent(this, AutreMatchActivity.class);
+        i.putExtra("idChampionnat", rencontre.getIdChampionnat());
+        i.putExtra("journee", rencontre.getJournee());
+        startActivity(i);
     }
 
     @Override

@@ -62,23 +62,7 @@ public class ResultRechercheMatch extends ListActivity {
         }
         adaptater = new ResultListAdaptateur(this,rencontreList);
         setListAdapter(adaptater);
-
     }
 
-    public void onRencontreClick(int pos){
-        int selectedMatch = pos;
-        Date now = new Date();
-        InfoRencontre r = rencontreList.get(pos);
-        Intent intent;
 
-
-
-        if(r.getDateHeure().compareTo(now) > 0){
-            intent = new Intent(this, BeforeMatchActivity.class);
-        }else{
-            intent = new Intent(this, AfterMatchActivity.class);
-        }
-        intent.putExtra("selectedRencontreId", r.getIdRencontre());
-        startActivity(intent);
-    }
 }
