@@ -56,7 +56,8 @@
                 android:layout_toStartOf="@+id/txtScore"
                 android:layout_above="@+id/btnVoirMatch"
                 android:layout_marginRight="5dp"
-                android:layout_weight="0.31" />
+                android:layout_weight="0.31"
+                android:textAlignment="textEnd" />
 
             <TextView
                 android:text="0-5"
@@ -66,7 +67,7 @@
                 android:layout_below="@+id/txtDateTime"
                 android:layout_centerHorizontal="true"
                 android:textAlignment="center"
-                android:textColor="#FE0101"
+                android:textColor="@android:color/black"
                 android:layout_weight="0.54"
                 android:textSize="30dp" />
 
