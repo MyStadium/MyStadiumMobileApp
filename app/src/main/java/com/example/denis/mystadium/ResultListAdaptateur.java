@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Utilisateur on 11-12-16.
@@ -47,7 +48,7 @@ public class ResultListAdaptateur extends ArrayAdapter<InfoRencontre> {
         TextView txtScore = (TextView) rowView.findViewById(R.id.txtScore);
         TextView txtAdresse = (TextView) rowView.findViewById(R.id.txtAdresse);
         Button btnVoirDetails = (Button) rowView.findViewById(R.id.btnVoirMatch);
-        Date date = getItem(position).getDateHeure();
+        final Date date = getItem(position).getDateHeure();
         SimpleDateFormat format2 = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         String dateString = format2.format(date);
         txtDateTime.setText(dateString);
@@ -75,13 +76,14 @@ public class ResultListAdaptateur extends ArrayAdapter<InfoRencontre> {
                         Toast.makeText(getContext(), "Erreur lors de la récupération du sport", Toast.LENGTH_SHORT).show();
                     }
 
-
-
-
-                    if(r.getDateHeure().compareTo(now) > 0){
-                        intent = new Intent(view.getContext(), BeforeMatchActivity.class);
+                    Date dateFinMatch = new Date(r.getDateHeure().getTime() + TimeUnit.MINUTES.toMillis(dureeMatch));
+                    if(now.after(r.getDateHeure()) && now.before(dateFinMatch) ){
+                        intent = new Intent(view.getContext(), DuringMatchActivity.class);
+                    }
+                    else if(now.after(dateFinMatch)){
+                        intent = new Intent(view.getContext(), AfterMatchActivity.class);
                     }else{
-                        intent = new Intent(getContext(), DuringMatchActivity.class);
+                        intent = new Intent(getContext(), BeforeMatchActivity.class);
                     }
                     intent.putExtra("selectedRencontreId", r.getIdRencontre());
                     getContext().startActivity(intent);
