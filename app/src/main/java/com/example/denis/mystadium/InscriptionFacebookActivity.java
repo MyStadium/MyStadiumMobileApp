@@ -20,6 +20,9 @@ import com.example.denis.mystadium.Request.HttpManagerUtilisateur;
 
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.security.MessageDigest;
+import java.util.Formatter;
+
 
 public class InscriptionFacebookActivity extends AppCompatActivity {
 
@@ -73,6 +76,8 @@ public class InscriptionFacebookActivity extends AppCompatActivity {
                 user.setEmail(txtEmail.getText().toString());
                 user.setNbrBonScore(0);
                 user.setIdRole(1);
+                String mdpsha = hashPassword(user.getPass());
+                user.setPass(mdpsha);
                 try {
                     requestUser.addUser(user);
                     SharedPreferences.Editor editor = shared.edit();
@@ -102,5 +107,31 @@ public class InscriptionFacebookActivity extends AppCompatActivity {
         }else{
             Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_LONG).show();
         }
+    }
+    public String hashPassword(String mdp){
+        String mdpsha ="";
+        try {
+            MessageDigest crypt = MessageDigest.getInstance("SHA-1");
+            crypt.reset();
+            crypt.update(mdp.getBytes("UTF-8"));
+            mdpsha = byteToHex(crypt.digest());
+            return mdpsha;
+
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+            return"";
+        }
+    }
+    private static String byteToHex(final byte[] hash)
+    {
+        Formatter formatter = new Formatter();
+        for (byte b : hash)
+        {
+            formatter.format("%02x", b);
+        }
+        String result = formatter.toString();
+        formatter.close();
+        return result;
     }
 }

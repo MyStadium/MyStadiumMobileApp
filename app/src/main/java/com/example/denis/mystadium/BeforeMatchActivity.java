@@ -94,7 +94,7 @@ public class BeforeMatchActivity extends AppCompatActivity {
             equipeDomicile = httpEquipeManager.getEquipeById(rencontre.getIdEquipeDomicile());
             equipeExterieur = httpEquipeManager.getEquipeById(rencontre.getIdEquipeExterieur());
 
-            SimpleDateFormat format = new SimpleDateFormat("EE dd/MM/yyyy hh:mm");
+            SimpleDateFormat format = new SimpleDateFormat("EE dd/MM/yyyy HH:mm");
             String dateHeure = format.format(rencontre.getDateHeure());
             txtNomDomicile.setText(rencontre.getNomEquipeDomicile());
             txtNomExterieur.setText(rencontre.getNomEquipeExterieur());

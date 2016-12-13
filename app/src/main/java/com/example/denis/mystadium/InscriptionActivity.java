@@ -17,6 +17,9 @@ import com.example.denis.mystadium.Request.HttpManagerUtilisateur;
 
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.security.MessageDigest;
+import java.util.Formatter;
+
 public class InscriptionActivity extends AppCompatActivity {
 
     private EditText txtNom;
@@ -63,7 +66,8 @@ public class InscriptionActivity extends AppCompatActivity {
 
         if(pass.equals(passconf)){
             if(formIsFilled(nom, prenom, login, mail, pass, passconf)){
-                Utilisateur user = new Utilisateur(1, nom, prenom, login, pass, mail, 0, 1,"0");
+                String mdpsha = hashPassword(pass);
+                Utilisateur user = new Utilisateur(1, nom, prenom, login, mdpsha, mail, 0, 1,"0");
                 try{
                     HttpManagerUtilisateur manager = new HttpManagerUtilisateur();
                     manager.addUser(user);
@@ -105,5 +109,31 @@ public class InscriptionActivity extends AppCompatActivity {
             }
         }
         return true;
+    }
+    public String hashPassword(String mdp){
+        String mdpsha ="";
+        try {
+            MessageDigest crypt = MessageDigest.getInstance("SHA-1");
+            crypt.reset();
+            crypt.update(mdp.getBytes("UTF-8"));
+            mdpsha = byteToHex(crypt.digest());
+            return mdpsha;
+
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+            return"";
+        }
+    }
+    private static String byteToHex(final byte[] hash)
+    {
+        Formatter formatter = new Formatter();
+        for (byte b : hash)
+        {
+            formatter.format("%02x", b);
+        }
+        String result = formatter.toString();
+        formatter.close();
+        return result;
     }
 }
