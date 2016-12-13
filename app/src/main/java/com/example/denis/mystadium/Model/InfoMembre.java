@@ -79,12 +79,14 @@ public class InfoMembre extends Membre implements Parcelable{
     }
 
     public InfoMembre(Parcel in){
-        String[] data = new String[3];
+        String[] data = new String[5];
 
         in.readStringArray(data);
         setId(Integer.parseInt(data[0]));
         setNom(data[1]);
         setPrenom(data[2]);
+        setNomClub(data[3]);
+        setCategorieAge(data[4]);
     }
 
     @Override
@@ -97,7 +99,9 @@ public class InfoMembre extends Membre implements Parcelable{
         dest.writeStringArray(new String[]{
                 ""+getId(),
                 getNom(),
-                getPrenom()
+                getPrenom(),
+                getNomClub(),
+                getCategorieAge()
         });
     }
 
