@@ -261,7 +261,11 @@ public class DuringMatchActivity extends AppCompatActivity {
         int scoreDomicile = domicileAdpater.getItem(spinnerScoreDomicile.getSelectedItemPosition());
         int scoreExterieur = exterieurAdpater.getItem(spinnerScoreExterieur.getSelectedItemPosition());
         Date date = new Date();
-        Score s = new Score(1, scoreDomicile, scoreExterieur, date, false, selectedRencontreId, shared.getConnectedUserId());
+        boolean certifiate  =false;
+        if(shared.getUserRole().equals("Administrateur") || shared.getUserRole().equals("Utilisateur certifié")){
+            certifiate = true;
+        }
+        Score s = new Score(1, scoreDomicile, scoreExterieur, date, certifiate, selectedRencontreId, shared.getConnectedUserId());
         try{
             httpScoreManager.postScore(s);
             Toast.makeText(getApplicationContext(), "Merci pour votre vote", Toast.LENGTH_SHORT).show();
