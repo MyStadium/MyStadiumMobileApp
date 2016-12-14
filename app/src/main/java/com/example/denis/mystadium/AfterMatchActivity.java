@@ -41,6 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class AfterMatchActivity extends AppCompatActivity {
 
@@ -81,6 +82,9 @@ public class AfterMatchActivity extends AppCompatActivity {
 
     private SharedActivity shared;
 
+    private int dureeMatch;
+    private Date dateFinMatch;
+
 
     private int currentlyItemSelected;
     private int previousItemSelected;
@@ -99,9 +103,11 @@ public class AfterMatchActivity extends AppCompatActivity {
             Bundle extra = getIntent().getExtras();
             if(extra != null){
                 selectedRencontreId = extra.getInt("selectedRencontreId");
+                dureeMatch = extra.getInt("dureeMatch");
             }
         }else{
             selectedRencontreId = savedInstanceState.getInt("selectedRencontreId");
+            dureeMatch = savedInstanceState.getInt("dureeMatch");
         }
         httpRencontreManager = new HttpManagerRencontre();
         httpMediaManager = new HttpManagerMedia();
@@ -179,6 +185,8 @@ public class AfterMatchActivity extends AppCompatActivity {
         listeViewCommentaire.setAdapter(commentaireAdapter);
 
 
+        dateFinMatch = new Date(rencontre.getDateHeure().getTime() + TimeUnit.MINUTES.toMillis(dureeMatch+30));
+
 
         SimpleDateFormat format = new SimpleDateFormat("EE dd/MM/yyyy hh:mm");
         String dateHeure = format.format(rencontre.getDateHeure());
@@ -190,49 +198,55 @@ public class AfterMatchActivity extends AppCompatActivity {
     }
 
     public void btnAmbianceClicked(){
-        final RatingBar ambianceRate;
-        final RatingBar niveauRate;
-        final RatingBar fairplayRate;
+        Date now = new Date();
+        if(!now.after(dateFinMatch)){
+            final RatingBar ambianceRate;
+            final RatingBar niveauRate;
+            final RatingBar fairplayRate;
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.ratinglayout, null);
-
-
-
-
-        ambianceRate = (RatingBar)convertView.findViewById(R.id.ratingAmbiance);
-        niveauRate = (RatingBar)convertView.findViewById(R.id.ratingNiveau);
-        fairplayRate = (RatingBar)convertView.findViewById(R.id.ratingFairplay);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            LayoutInflater inflater = getLayoutInflater();
+            View convertView = (View) inflater.inflate(R.layout.ratinglayout, null);
 
 
 
-        convertView.setPadding(50,50,50,50);
-        builder.setView(convertView);
-        builder.setMessage("Vote d'ambiance")
-                .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                })
-                .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        try{
-                            final Vote v = new Vote((int)niveauRate.getRating(), (int)fairplayRate.getRating(), (int)ambianceRate.getRating(), shared.getConnectedUserId(), rencontre.getIdRencontre());
-                            httpVoteManager.postVote(v);
-                            Toast.makeText(getApplicationContext(), "Merci pour votre vote !", Toast.LENGTH_SHORT).show();
-                            refreshAvgVote();
-                        }catch(HttpClientErrorException e){
-                            Toast.makeText(getApplicationContext(), "Vous avez déjà voté pour ce match", Toast.LENGTH_SHORT).show();
-                        }catch(Exception e){
-                            Toast.makeText(getApplicationContext(), "Erreur lors de l'envoie du vote", Toast.LENGTH_SHORT).show();
+
+            ambianceRate = (RatingBar)convertView.findViewById(R.id.ratingAmbiance);
+            niveauRate = (RatingBar)convertView.findViewById(R.id.ratingNiveau);
+            fairplayRate = (RatingBar)convertView.findViewById(R.id.ratingFairplay);
+
+
+
+            convertView.setPadding(50,50,50,50);
+            builder.setView(convertView);
+            builder.setMessage("Vote d'ambiance")
+                    .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
                         }
+                    })
+                    .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            try{
+                                final Vote v = new Vote((int)niveauRate.getRating(), (int)fairplayRate.getRating(), (int)ambianceRate.getRating(), shared.getConnectedUserId(), rencontre.getIdRencontre());
+                                httpVoteManager.postVote(v);
+                                Toast.makeText(getApplicationContext(), "Merci pour votre vote !", Toast.LENGTH_SHORT).show();
+                                refreshAvgVote();
+                            }catch(HttpClientErrorException e){
+                                Toast.makeText(getApplicationContext(), "Vous avez déjà voté pour ce match", Toast.LENGTH_SHORT).show();
+                            }catch(Exception e){
+                                Toast.makeText(getApplicationContext(), "Erreur lors de l'envoie du vote", Toast.LENGTH_SHORT).show();
+                            }
 
-                    }
-                });
+                        }
+                    });
 
-        builder.show();
+            builder.show();
+        }else{
+            Toast.makeText(getApplicationContext(), "Il est trop tard voter", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void refreshAvgVote(){
@@ -247,87 +261,100 @@ public class AfterMatchActivity extends AppCompatActivity {
     }
 
     public void btnAddScoreClicked(){
-        HttpManagerScore httpScoreManager = new HttpManagerScore();
-        int scoreDomicile = domicileAdpater.getItem(spinnerDomicile.getSelectedItemPosition());
-        int scoreExterieur = exterieurAdpater.getItem(spinnerExterieur.getSelectedItemPosition());
-        Date date = new Date();
-        int userID = shared.getConnectedUserId();
-        Score s = new Score(1, scoreDomicile, scoreExterieur, date, false, selectedRencontreId, userID);
-        try{
-            httpScoreManager.postScore(s);
-            Toast.makeText(getApplicationContext(), "Merci pour votre vote", Toast.LENGTH_SHORT).show();
-        }catch(Exception e){
-            Toast.makeText(getApplicationContext(), "Impossible d'envoyer votre score", Toast.LENGTH_SHORT).show();
+        Date now = new Date();
+        if(!now.after(dateFinMatch)) {
+            HttpManagerScore httpScoreManager = new HttpManagerScore();
+            int scoreDomicile = domicileAdpater.getItem(spinnerDomicile.getSelectedItemPosition());
+            int scoreExterieur = exterieurAdpater.getItem(spinnerExterieur.getSelectedItemPosition());
+            Date date = new Date();
+            int userID = shared.getConnectedUserId();
+            boolean certifiate  =false;
+            if(shared.getUserRole().equals("Administrateur") || shared.getUserRole().equals("Utilisateur certifié")){
+                certifiate = true;
+            }
+            Score s = new Score(1, scoreDomicile, scoreExterieur, date, certifiate, selectedRencontreId, userID);
+            try {
+                httpScoreManager.postScore(s);
+                Toast.makeText(getApplicationContext(), "Merci pour votre vote", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "Impossible d'envoyer votre score", Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            Toast.makeText(getApplicationContext(), "Il est trop tard voter", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void btnVoteClicked(){
+        Date now = new Date();
+        if(!now.after(dateFinMatch)) {
+
+            final SharedActivity shared = new SharedActivity(this);
+
+            List<InfoMembre> listMembersFromTeam1;
+            List<InfoMembre> listMembersFromTeam2;
+            List<InfoMembre> listMembersFromBothTeams;
+            HttpManagerMembre httpMembreManager;
 
 
-        final SharedActivity shared = new SharedActivity(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            LayoutInflater inflater = getLayoutInflater();
+            View convertView = (View) inflater.inflate(R.layout.playerlistlayout, null);
 
-        List<InfoMembre> listMembersFromTeam1;
-        List<InfoMembre> listMembersFromTeam2;
-        List<InfoMembre> listMembersFromBothTeams;
-        HttpManagerMembre httpMembreManager;
+            httpMembreManager = new HttpManagerMembre();
+            final HttpManagerVoteMVP httpVoteMvpManager = new HttpManagerVoteMVP();
 
+            listPlayers = (ListView) convertView.findViewById(R.id.listViewMVP);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.playerlistlayout, null);
-
-        httpMembreManager = new HttpManagerMembre();
-        final HttpManagerVoteMVP httpVoteMvpManager = new HttpManagerVoteMVP();
-
-        listPlayers = (ListView) convertView.findViewById(R.id.listViewMVP);
-
-        try{
-            listMembersFromTeam1 = httpMembreManager.getMebersFromTeam(rencontre.getIdEquipeDomicile());
-            listMembersFromTeam2 = httpMembreManager.getMebersFromTeam(rencontre.getIdEquipeExterieur());
-            listMembersFromTeam1.addAll(listMembersFromTeam2);
-            listViewAdapter = new ArrayAdapter<InfoMembre>(this, android.R.layout.simple_list_item_1, listMembersFromTeam1);
-            listPlayers.setAdapter(listViewAdapter);
-            listPlayers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    onItemClickMethod(position);
-                }
-            });
-
-
-        }catch(Exception e){
-            Toast.makeText(getApplicationContext(), "Impossible de charger la liste des joueurs du match", Toast.LENGTH_SHORT).show();
-        }
-
-        convertView.setPadding(50,50,50,50);
-        builder.setView(convertView);
-        builder.setMessage("Elir MVP")
-                .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                })
-                .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+            try{
+                listMembersFromTeam1 = httpMembreManager.getMebersFromTeam(rencontre.getIdEquipeDomicile());
+                listMembersFromTeam2 = httpMembreManager.getMebersFromTeam(rencontre.getIdEquipeExterieur());
+                listMembersFromTeam1.addAll(listMembersFromTeam2);
+                listViewAdapter = new ArrayAdapter<InfoMembre>(this, android.R.layout.simple_list_item_1, listMembersFromTeam1);
+                listPlayers.setAdapter(listViewAdapter);
+                listPlayers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    if(selectedMember != null){
-                        VoteMVP v = new VoteMVP(shared.getConnectedUserId(), selectedMember.getId(), selectedRencontreId);
-                        try{
-                            httpVoteMvpManager.postVoteMVP(v);
-                            Toast.makeText(getApplicationContext(), "Merci pour votre vote", Toast.LENGTH_SHORT).show();
-                        }catch(HttpClientErrorException e){
-                            Toast.makeText(getApplicationContext(), "Vous avez déjà voté pour ce match", Toast.LENGTH_SHORT).show();
-                        }catch(Exception e){
-                            Toast.makeText(getApplicationContext(), "Erreur lors de l'envoie du vote", Toast.LENGTH_SHORT).show();
-                        }
-                    }else{
-                        Toast.makeText(getApplicationContext(), "Veuillez sélectionner un joueur", Toast.LENGTH_SHORT).show();
-                    }
-
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        onItemClickMethod(position);
                     }
                 });
 
-        builder.show();
+
+            }catch(Exception e){
+                Toast.makeText(getApplicationContext(), "Impossible de charger la liste des joueurs du match", Toast.LENGTH_SHORT).show();
+            }
+
+            convertView.setPadding(50,50,50,50);
+            builder.setView(convertView);
+            builder.setMessage("Elir MVP")
+                    .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    })
+                    .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        if(selectedMember != null){
+                            VoteMVP v = new VoteMVP(shared.getConnectedUserId(), selectedMember.getId(), selectedRencontreId);
+                            try{
+                                httpVoteMvpManager.postVoteMVP(v);
+                                Toast.makeText(getApplicationContext(), "Merci pour votre vote", Toast.LENGTH_SHORT).show();
+                            }catch(HttpClientErrorException e){
+                                Toast.makeText(getApplicationContext(), "Vous avez déjà voté pour ce match", Toast.LENGTH_SHORT).show();
+                            }catch(Exception e){
+                                Toast.makeText(getApplicationContext(), "Erreur lors de l'envoie du vote", Toast.LENGTH_SHORT).show();
+                            }
+                        }else{
+                            Toast.makeText(getApplicationContext(), "Veuillez sélectionner un joueur", Toast.LENGTH_SHORT).show();
+                        }
+
+                        }
+                    });
+
+            builder.show();
+        }else{
+            Toast.makeText(getApplicationContext(), "Il est trop tard voter", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onItemClickMethod(int position){

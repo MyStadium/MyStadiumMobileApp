@@ -49,6 +49,7 @@ public class SharedActivity extends AppCompatActivity {
         editor.putInt("connectedUserNbrBonScore", 0);
         editor.putInt("connectedUserId", 0);
         editor.putString("connectedUserFacebookId","");
+        editor.putString("connectedUserRole","");
         editor.commit();
     }
 
@@ -64,6 +65,16 @@ public class SharedActivity extends AppCompatActivity {
 
     public String getConnectedUserLogin(){
         return shared.getString("connectedUserLogin", "");
+    }
+
+    public void putUserRole(String role){
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putString("connecteduserRole", "");
+        editor.commit();
+    }
+
+    public String getUserRole(){
+        return shared.getString("connectedUserRole", "");
     }
 
     public String getConnectedUserForname(){

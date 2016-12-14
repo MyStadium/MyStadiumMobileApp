@@ -82,6 +82,7 @@ public class ResultListAdaptateur extends ArrayAdapter<InfoRencontre> {
                     }
                     else if(now.after(dateFinMatch)){
                         intent = new Intent(view.getContext(), AfterMatchActivity.class);
+                        intent.putExtra("dureeMatch", dureeMatch);
                     }else{
                         intent = new Intent(getContext(), BeforeMatchActivity.class);
                     }

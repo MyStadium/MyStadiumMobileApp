@@ -17,7 +17,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.denis.mystadium.Model.Role;
 import com.example.denis.mystadium.Model.Utilisateur;
+import com.example.denis.mystadium.Request.HttpManager;
+import com.example.denis.mystadium.Request.HttpManagerRole;
 import com.example.denis.mystadium.Request.HttpManagerUtilisateur;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -50,6 +53,7 @@ public class connection_frag extends android.support.v4.app.Fragment{
     private Button btnInscription;
     private Utilisateur user = null;
     private HttpManagerUtilisateur requestUser;
+    private HttpManagerRole roleManager;
     private LoginButton loginButton;
     private CallbackManager mCallBackManager;
     private String idFacebook;
@@ -71,6 +75,7 @@ public class connection_frag extends android.support.v4.app.Fragment{
         myView = inflater.inflate(R.layout.connection, container, false);
 
         requestUser = new HttpManagerUtilisateur();
+        roleManager = new HttpManagerRole();
         txtLogin = (EditText) myView.findViewById(R.id.txtLogin);
         txtPass = (EditText) myView.findViewById(R.id.txtPass);
         btnConnection = (Button) myView.findViewById(R.id.btnConnection);
@@ -93,8 +98,16 @@ public class connection_frag extends android.support.v4.app.Fragment{
                     Profile profile = Profile.getCurrentProfile();
 
 
-                    idFacebook = profile.getId();
-                    user = requestUser.getUserByIdFacebook(idFacebook);
+
+                    try{
+                        idFacebook = profile.getId();
+                        user = requestUser.getUserByIdFacebook(idFacebook);
+                        Role r = roleManager.getRole(user.getIdRole());
+                        shared.putUserRole(r.getLibelle());
+                    }catch(Exception e){
+                        Toast.makeText(getContext(), "Erreur lors de l'accès au serveur", Toast.LENGTH_SHORT).show();
+                    }
+
                     if( user != null){
                         shared.connectUser(user);
 
@@ -136,6 +149,8 @@ public class connection_frag extends android.support.v4.app.Fragment{
         try {
             String passSha = shared.hashPassword(txtPass.getText().toString());
             user = requestUser.tryToConnectUser(txtLogin.getText().toString(), passSha);
+            Role r = roleManager.getRole(user.getIdRole());
+            shared.putUserRole(r.getLibelle());
         }catch(Exception e){
             Toast.makeText(getContext(), "Erreur lors de l'accès au serveur", Toast.LENGTH_SHORT).show();
         }
