@@ -12,8 +12,6 @@
             android:tag="lstfrag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:name="com.example.denis.mystadium.FragmentListRecherche"
             android:id="@+id/fragmentrecherche"
             tools:layout="@layout/list_recherche_frag"
              />

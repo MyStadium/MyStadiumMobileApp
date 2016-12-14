@@ -24,7 +24,7 @@ public class HttpManagerRencontre {
 
     }
 
-    public List<InfoRencontre> getRencontreProcheList(double latitude, double longitude){
+    public List<InfoRencontre> getRencontreProcheList(double latitude, double longitude)throws Exception{
         try {
             HttpManager manager = new HttpManager();
             Date date = new Date();
@@ -42,10 +42,10 @@ public class HttpManagerRencontre {
             return liste;
         }catch(Exception e){
             e.printStackTrace();
-            return null;
+            throw e;
         }
     }
-    public List<InfoRencontre> getRencontreRechercheList(String dateDebut,String dateFin,String nbKilometreString,double latitude,double longitude){
+    public List<InfoRencontre> getRencontreRechercheList(String dateDebut,String dateFin,String nbKilometreString,double latitude,double longitude)throws Exception{
         try{
             HttpManager manager = new HttpManager();
             String url = "/rencontre/find/" + dateDebut + "/" + dateFin + "/" + nbKilometreString + "/" + latitude + "/" + longitude;
@@ -55,7 +55,7 @@ public class HttpManagerRencontre {
             return liste;
         }catch(Exception e){
             e.printStackTrace();
-            return null;
+            throw e;
         }
     }
 
