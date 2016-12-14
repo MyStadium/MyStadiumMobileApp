@@ -17,9 +17,12 @@ public class HttpManager {
     }
 
     public RestTemplate getTemplate(){
+        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+        factory.setConnectTimeout(5000);
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        restTemplate.setRequestFactory(factory);
+
         return restTemplate;
     }
 
