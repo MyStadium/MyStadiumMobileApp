@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     tools:context="com.example.denis.mystadium.ResultRechercheMatch">
 
 
@@ -11,7 +11,7 @@
         <fragment
             android:tag="lstfrag"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
 
             android:name="com.example.denis.mystadium.FragmentListRecherche"
             android:id="@+id/fragmentrecherche"
@@ -19,30 +19,12 @@
              />
 
 
-    <!--<Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nouvelle recherche"
-        android:id="@+id/btnNouvelleRecherche"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="32dp" />
+        <TextView
+            android:layout_width="354dp"
+            android:layout_height="79dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/txtVide"
+            android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Résultat de la recherche"
-        android:id="@+id/textView11"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/textView11"
-        android:layout_above="@+id/btnNouvelleRecherche"
-        android:layout_alignParentStart="true"
-        android:id="@+id/listViewResult" />-->
 
 </LinearLayout>
