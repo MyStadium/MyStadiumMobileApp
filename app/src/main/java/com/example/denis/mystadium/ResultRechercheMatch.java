@@ -68,6 +68,10 @@ public class ResultRechercheMatch extends ListActivity {
         }else{
             rencontreList = requestManager.getRencontreProcheList(latitude,longitude);
         }
+
+        adaptater = new ResultListAdaptateur(this,rencontreList);
+        setListAdapter(adaptater);
+
         if(!rencontreList.isEmpty()) {
             adaptater = new ResultListAdaptateur(this, rencontreList);
             setListAdapter(adaptater);
@@ -76,22 +80,8 @@ public class ResultRechercheMatch extends ListActivity {
             Toast.makeText(getApplicationContext(), "Aucun match ne correspond à votre recherche", Toast.LENGTH_LONG).show();
         }
 
+
     }
 
-    public void onRencontreClick(int pos){
-        int selectedMatch = pos;
-        Date now = new Date();
-        InfoRencontre r = rencontreList.get(pos);
-        Intent intent;
 
-
-
-        if(r.getDateHeure().compareTo(now) > 0){
-            intent = new Intent(this, BeforeMatchActivity.class);
-        }else{
-            intent = new Intent(this, AfterMatchActivity.class);
-        }
-        intent.putExtra("selectedRencontreId", r.getIdRencontre());
-        startActivity(intent);
-    }
 }

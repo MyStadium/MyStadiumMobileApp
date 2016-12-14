@@ -51,7 +51,7 @@
         android:layout_below="@+id/txtDuringScore"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="31dp"
-        android:id="@+id/button3" />
+        android:id="@+id/btnDuringAddScore" />
 
     <Button
         android:text="Classement"
@@ -66,7 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnAUtreMatch"
-        android:layout_below="@+id/button3"
+        android:layout_below="@+id/btnDuringAddScore"
         android:layout_alignParentStart="true" />
 
 
@@ -95,7 +95,7 @@
         android:contentDescription="Partager"
         android:layout_above="@+id/duringListCom"
         android:layout_alignEnd="@+id/duringListCom"
-        android:layout_toEndOf="@+id/button3"
+        android:layout_toEndOf="@+id/btnDuringAddScore"
         android:layout_alignTop="@+id/btnAUtreMatch" />
 
     <TextView
@@ -115,5 +115,22 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="13dp" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinnerDuringDomicile"
+        android:layout_above="@+id/btnAUtreMatch"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/btnDuringAddScore" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinnerDuringExterieur"
+        android:layout_alignTop="@+id/spinnerDuringDomicile"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/btnDuringAddScore" />
 
 </RelativeLayout>
