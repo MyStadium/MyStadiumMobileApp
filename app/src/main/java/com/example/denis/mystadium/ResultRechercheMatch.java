@@ -79,6 +79,7 @@ public class ResultRechercheMatch extends ListActivity {
             dialog = new ProgressDialog(c);
         }
 
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -100,13 +101,10 @@ public class ResultRechercheMatch extends ListActivity {
                 e.printStackTrace();
                 if(dialog.isShowing()){
                     dialog.dismiss();
+                 
                 }
-
                 cancel(true);
-
              }
-
-
             return null;
         }
 
@@ -132,6 +130,7 @@ public class ResultRechercheMatch extends ListActivity {
             }
         }
     }
+
 
 
 }
