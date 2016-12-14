@@ -47,7 +47,7 @@
         <activity android:name=".AfterMatchActivity"
             android:screenOrientation="portrait"/>
       <activity android:name=".AutreMatchActivity" 
-                android:screenOrientation="portrait/>
+                android:screenOrientation="portrait"/>
     <activity android:name=".DuringMatchActivity" 
                                 android:screeOrientation="portrait" />
         <activity
