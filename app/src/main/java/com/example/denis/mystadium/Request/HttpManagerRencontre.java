@@ -1,6 +1,7 @@
 package com.example.denis.mystadium.Request;
 
 import com.example.denis.mystadium.Model.InfoRencontre;
+import com.example.denis.mystadium.Model.UserOnMatch;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -76,6 +77,19 @@ public class HttpManagerRencontre {
             HttpManager manager = new HttpManager();
             InfoRencontre rencontre = manager.getTemplate().getForObject(manager.getRestUrl()+"/infoRencontre/id/"+id, InfoRencontre.class);
             return rencontre;
+        }catch(Exception e){
+            throw e;
+        }
+    }
+
+    public UserOnMatch isUserOnMatch(Date from, Date to, float rayon, double latitude, double longitude, int idRencontre) throws Exception{
+        try{
+            HttpManager manager = new HttpManager();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            String dateFrom = format.format(from);
+            String dateTo = format.format(to);
+            UserOnMatch userOnMatch = manager.getTemplate().getForObject(manager.getRestUrl()+"/rencontre/onMatch/"+dateFrom+"/"+dateTo+"/"+rayon+"/"+latitude+"/"+longitude+"/"+idRencontre, UserOnMatch.class);
+            return userOnMatch;
         }catch(Exception e){
             throw e;
         }

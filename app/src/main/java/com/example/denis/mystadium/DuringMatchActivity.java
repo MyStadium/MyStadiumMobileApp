@@ -3,6 +3,7 @@ package com.example.denis.mystadium;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -25,6 +26,7 @@ import com.example.denis.mystadium.Model.InfoMembre;
 import com.example.denis.mystadium.Model.InfoRencontre;
 import com.example.denis.mystadium.Model.Media;
 import com.example.denis.mystadium.Model.Score;
+import com.example.denis.mystadium.Model.UserOnMatch;
 import com.example.denis.mystadium.Model.Vote;
 import com.example.denis.mystadium.Request.HttpManager;
 import com.example.denis.mystadium.Request.HttpManagerEquipe;
@@ -46,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class DuringMatchActivity extends AppCompatActivity {
 
@@ -86,6 +89,11 @@ public class DuringMatchActivity extends AppCompatActivity {
     private ArrayAdapter<Integer> exterieurAdpater;
     private ArrayList<Integer> listeScore = new ArrayList<>();
 
+    private UserOnMatch userOnMatch;
+    private Date now;
+    private Date dayAfter;
+    private GPSTracker gps;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +103,10 @@ public class DuringMatchActivity extends AppCompatActivity {
         txtNomDomicile = (TextView)findViewById(R.id.txtDuringNomDomicile);
         txtNomExterieur = (TextView)findViewById(R.id.txtDuringNomExterieur);
         txtJournee = (TextView)findViewById(R.id.txtDuringJournee);
+
+        gps = new GPSTracker(this);
+        now = new Date();
+        dayAfter = new Date(now.getTime() + TimeUnit.DAYS.toMillis(1));
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
@@ -173,15 +185,7 @@ public class DuringMatchActivity extends AppCompatActivity {
         btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ShareDialog.canShow(ShareLinkContent.class)){
-                    ShareLinkContent content = new ShareLinkContent.Builder()
-                            .setContentTitle("MyStadium App")
-                            .setContentDescription("Salut, je regarde le match "+ equipeDomicile.getNomClub() +" - "+ equipeExterieur.getNomClub()+" dans la catégorie :"+equipeDomicile.getCategorieAge())
-                            .setContentUrl(Uri.parse("https://www.google.be"))
-                            .build();
-
-                    shareDialog.show(content);
-                }
+                shareOnFacebook();
             }
         });
         addScore.setOnClickListener(new View.OnClickListener() {
@@ -209,69 +213,85 @@ public class DuringMatchActivity extends AppCompatActivity {
 
     public void btnAddComClicked() {
 
-        final SharedActivity shared = new SharedActivity(this);
-        HttpManagerMedia httmMediaManager = new HttpManagerMedia();
+
+        userOnMatch = getUserOnMatch();
+        if(userOnMatch.getBool()){
+            final SharedActivity shared = new SharedActivity(this);
+            HttpManagerMedia httmMediaManager = new HttpManagerMedia();
 
 
 
-        final EditText txtCom;
+            final EditText txtCom;
 
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.addcommlayout, null);
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+            LayoutInflater inflater = getLayoutInflater();
+            View convertView = (View) inflater.inflate(R.layout.addcommlayout, null);
 
-        txtCom = (EditText) convertView.findViewById(R.id.longTextFieldAddCom);
-
-
+            txtCom = (EditText) convertView.findViewById(R.id.longTextFieldAddCom);
 
 
-        convertView.setPadding(50, 50, 50, 50);
-        builder.setView(convertView);
-        builder.setMessage("Ajouter un commentaire")
-                .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                })
-                .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(!txtCom.getText().toString().equals("")){
-                            Media m = new Media(1, "", txtCom.getText().toString(), shared.getConnectedUserId(), selectedRencontreId);
-                            try{
-                                httpMediaManager.postMedia(m);
-                                listeCommentaires.add(shared.getConnectedUserLogin()+": "+m.getCommentaire());
-                                Toast.makeText(getApplicationContext(), "Merci pour votre commentaire", Toast.LENGTH_LONG).show();
-                            }catch(Exception e){
-                                Toast.makeText(getApplicationContext(), "Erreur lors de l'ajout de votre commentaire", Toast.LENGTH_LONG).show();
-                            }
-                        }else{
-                            Toast.makeText(getApplicationContext(), "Veuillez écrire un commentaire plus long", Toast.LENGTH_LONG).show();
+
+
+            convertView.setPadding(50, 50, 50, 50);
+            builder.setView(convertView);
+            builder.setMessage("Ajouter un commentaire")
+                    .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
                         }
+                    })
+                    .setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if(!txtCom.getText().toString().equals("")){
+                                Media m = new Media(1, "", txtCom.getText().toString(), shared.getConnectedUserId(), selectedRencontreId);
+                                try{
+                                    httpMediaManager.postMedia(m);
+                                    listeCommentaires.add(shared.getConnectedUserLogin()+": "+m.getCommentaire());
+                                    Toast.makeText(getApplicationContext(), "Merci pour votre commentaire", Toast.LENGTH_LONG).show();
+                                }catch(Exception e){
+                                    Toast.makeText(getApplicationContext(), "Erreur lors de l'ajout de votre commentaire", Toast.LENGTH_LONG).show();
+                                }
+                            }else{
+                                Toast.makeText(getApplicationContext(), "Veuillez écrire un commentaire plus long", Toast.LENGTH_LONG).show();
+                            }
 
-                    }
-                });
+                        }
+                    });
 
-        builder.show();
+            builder.show();
+        }else{
+            Toast.makeText(getApplicationContext(), "Vous n'êtes pas sur le lieu du match", Toast.LENGTH_LONG).show();
+        }
+
+
     }
 
     public void btnAddScoreClicked(){
-        SharedActivity shared = new SharedActivity(this);
-        HttpManagerScore httpScoreManager = new HttpManagerScore();
-        int scoreDomicile = domicileAdpater.getItem(spinnerScoreDomicile.getSelectedItemPosition());
-        int scoreExterieur = exterieurAdpater.getItem(spinnerScoreExterieur.getSelectedItemPosition());
-        Date date = new Date();
-        boolean certifiate  =false;
-        if(shared.getUserRole().equals("Administrateur") || shared.getUserRole().equals("Utilisateur certifié")){
-            certifiate = true;
+        userOnMatch = getUserOnMatch();
+
+        if(userOnMatch.getBool()){
+            SharedActivity shared = new SharedActivity(this);
+            HttpManagerScore httpScoreManager = new HttpManagerScore();
+            int scoreDomicile = domicileAdpater.getItem(spinnerScoreDomicile.getSelectedItemPosition());
+            int scoreExterieur = exterieurAdpater.getItem(spinnerScoreExterieur.getSelectedItemPosition());
+            Date date = new Date();
+            boolean certifiate  =false;
+            if(shared.getUserRole().equals("Administrateur") || shared.getUserRole().equals("Utilisateur certifié")){
+                certifiate = true;
+            }
+            Score s = new Score(1, scoreDomicile, scoreExterieur, date, certifiate, selectedRencontreId, shared.getConnectedUserId());
+            try{
+                httpScoreManager.postScore(s);
+                Toast.makeText(getApplicationContext(), "Merci pour votre vote", Toast.LENGTH_SHORT).show();
+            }catch(Exception e){
+                Toast.makeText(getApplicationContext(), "Impossible d'envoyer votre score", Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            Toast.makeText(getApplicationContext(), "Vous n'êtes pas sur le lieu du match", Toast.LENGTH_SHORT).show();
         }
-        Score s = new Score(1, scoreDomicile, scoreExterieur, date, certifiate, selectedRencontreId, shared.getConnectedUserId());
-        try{
-            httpScoreManager.postScore(s);
-            Toast.makeText(getApplicationContext(), "Merci pour votre vote", Toast.LENGTH_SHORT).show();
-        }catch(Exception e){
-            Toast.makeText(getApplicationContext(), "Impossible d'envoyer votre score", Toast.LENGTH_SHORT).show();
-        }
+
+
     }
 
     public void btnAutreMatchClicked(){
@@ -279,6 +299,37 @@ public class DuringMatchActivity extends AppCompatActivity {
         i.putExtra("idChampionnat", rencontre.getIdChampionnat());
         i.putExtra("journee", rencontre.getJournee());
         startActivity(i);
+    }
+
+    public UserOnMatch getUserOnMatch(){
+        Location location = gps.getLocation();
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+
+        try{
+            userOnMatch = httpRencontreManager.isUserOnMatch(now, dayAfter, 1, latitude, longitude, rencontre.getIdRencontre());
+        }catch(Exception e){
+
+        }
+        return userOnMatch;
+    }
+
+    public void shareOnFacebook(){
+        userOnMatch = getUserOnMatch();
+        if(userOnMatch.getBool()){
+            if(ShareDialog.canShow(ShareLinkContent.class)){
+                ShareLinkContent content = new ShareLinkContent.Builder()
+                        .setContentTitle("MyStadium App")
+                        .setContentDescription("Salut, je regarde le match "+ equipeDomicile.getNomClub() +" - "+ equipeExterieur.getNomClub()+" dans la catégorie :"+equipeDomicile.getCategorieAge())
+                        .setContentUrl(Uri.parse("https://www.google.be"))
+                        .build();
+
+                shareDialog.show(content);
+            }
+        }else{
+            Toast.makeText(getApplicationContext(), "Vous n'êtes pas sur le lieu du match", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
