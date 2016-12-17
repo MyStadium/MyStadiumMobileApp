@@ -1,7 +1,10 @@
 package com.example.denis.mystadium;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
@@ -33,7 +36,7 @@ public class InscriptionFacebookActivity extends AppCompatActivity {
     private Button btnValider;
     private Utilisateur user;
     private HttpManagerUtilisateur requestUser;
-    private SharedPreferences shared;
+    private SharedActivity shared;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +47,7 @@ public class InscriptionFacebookActivity extends AppCompatActivity {
         txtPasswordConf = (EditText) findViewById(R.id.txtPasswordConf);
         btnValider = (Button) findViewById(R.id.btnValider);
         requestUser = new HttpManagerUtilisateur();
-        shared = PreferenceManager.getDefaultSharedPreferences(this);
+        shared = new SharedActivity(this);
         user = new Utilisateur();
 
         if (savedInstanceState == null) {
@@ -76,31 +79,10 @@ public class InscriptionFacebookActivity extends AppCompatActivity {
                 user.setEmail(txtEmail.getText().toString());
                 user.setNbrBonScore(0);
                 user.setIdRole(1);
-                String mdpsha = hashPassword(user.getPass());
+                String mdpsha = shared.hashPassword(user.getPass());
                 user.setPass(mdpsha);
-                try {
-                    requestUser.addUser(user);
-                    SharedPreferences.Editor editor = shared.edit();
-                    editor.putString("connectedUserName", user.getNom());
-                    editor.putString("connectedUserForname", user.getPrenom());
-                    editor.putString("connectedUserMail", user.getEmail());
-                    editor.putString("connectedUserPassword", user.getPass());
-                    editor.putString("connectedUserLogin", user.getLogin());
-                    editor.putInt("connectedUserIdRole", user.getIdRole());
-                    editor.putInt("connectedUserNbrBonScore", user.getNbrBonScore());
-                    Utilisateur userConnected = requestUser.getUserByMail(user.getEmail());
-                    editor.putInt("connectedUserId", userConnected.getId());
-                    editor.putString("connectedUserIdFacebook", userConnected.getIdFacebook());
-                    editor.commit();
 
-                    FragmentManager fragManager = getSupportFragmentManager();
-                    fragManager.beginTransaction().replace(R.id.content_nav, new disconnect_frag()).commit();
-                }catch(HttpClientErrorException e){
-                    Toast.makeText(this, "L'adresse mail ou le login sont déjà utilisés", Toast.LENGTH_LONG).show();
-                }
-                catch(Exception e){
-                    Toast.makeText(this, "Erreur lors de votre inscription", Toast.LENGTH_LONG).show();
-                }
+                new AsyncInscriptionTask(this).execute(user);
             }else{
                 Toast.makeText(this, "Les mots de passe ne correspondent pas", Toast.LENGTH_LONG).show();
             }
@@ -108,30 +90,70 @@ public class InscriptionFacebookActivity extends AppCompatActivity {
             Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_LONG).show();
         }
     }
-    public String hashPassword(String mdp){
-        String mdpsha ="";
-        try {
-            MessageDigest crypt = MessageDigest.getInstance("SHA-1");
-            crypt.reset();
-            crypt.update(mdp.getBytes("UTF-8"));
-            mdpsha = byteToHex(crypt.digest());
-            return mdpsha;
+
+    private class AsyncInscriptionTask extends AsyncTask<Utilisateur,Void,Utilisateur> {
+        private Context mContext;
+        private ProgressDialog dialog;
+        private int exception;
+
+        public AsyncInscriptionTask(Context c){
+            mContext = c;
+            dialog = new ProgressDialog(c);
+        }
 
 
-        }catch(Exception ex){
-            ex.printStackTrace();
-            return"";
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.setMessage("Récupération des données depuis le serveur...");
+            dialog.show();
         }
-    }
-    private static String byteToHex(final byte[] hash)
-    {
-        Formatter formatter = new Formatter();
-        for (byte b : hash)
-        {
-            formatter.format("%02x", b);
+
+        @Override
+        protected Utilisateur doInBackground(Utilisateur[] params) {
+
+            try {
+                requestUser.addUser((Utilisateur) params[0]);
+
+            }catch(HttpClientErrorException e){
+                exception=406;
+                cancel(true);
+            } catch (Exception e){
+                e.printStackTrace();
+                exception = 1;
+                if(dialog.isShowing()){
+                    dialog.dismiss();
+
+                }
+                cancel(true);
+
+            }
+            return params[0];
         }
-        String result = formatter.toString();
-        formatter.close();
-        return result;
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            if(exception == 406) {
+                Toast.makeText(mContext, "L'adresse mail ou le login sont déjà utilisés", Toast.LENGTH_LONG).show();
+
+            }else {
+                Toast.makeText(mContext, "Serveur injoignable", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Utilisateur user) {
+            super.onPostExecute(user);
+            if(dialog.isShowing()){
+                dialog.dismiss();
+            }
+            shared = new SharedActivity(mContext);
+            shared.connectUser(user);
+            FragmentManager fragManager = getSupportFragmentManager();
+            fragManager.beginTransaction().replace(R.id.content_nav, new disconnect_frag()).commit();
+
+
+        }
     }
 }

@@ -1,8 +1,10 @@
 package com.example.denis.mystadium;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,37 +61,85 @@ public class ResultListAdaptateur extends ArrayAdapter<InfoRencontre> {
         btnVoirDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                    int selectedMatch = position;
-                    Date now = new Date();
-                    InfoRencontre r = getItem(position);
-                    Intent intent;
-
-                    Sport s;
-                    int dureeMatch = 0;
-                    try{
-                        s = httpSportManager.getSportFromRencontre(r.getIdRencontre());
-                        dureeMatch = s.getNbrPeriodes()*s.getTempsPeriode() + 20;
-
-                    }catch(Exception e){
-                        Toast.makeText(getContext(), "Erreur lors de la récupération du sport", Toast.LENGTH_SHORT).show();
-                    }
-
-                    Date dateFinMatch = new Date(r.getDateHeure().getTime() + TimeUnit.MINUTES.toMillis(dureeMatch));
-                    if(now.after(r.getDateHeure()) && now.before(dateFinMatch) ){
-                        intent = new Intent(view.getContext(), DuringMatchActivity.class);
-                    }
-                    else if(now.after(dateFinMatch)){
-                        intent = new Intent(view.getContext(), AfterMatchActivity.class);
-                        intent.putExtra("dureeMatch", dureeMatch);
-                    }else{
-                        intent = new Intent(getContext(), BeforeMatchActivity.class);
-                    }
-                    intent.putExtra("selectedRencontreId", r.getIdRencontre());
-                    getContext().startActivity(intent);
-            }
+                new AsyncVoirDetailsTask(getContext(),position,view).execute();
+           }
         });
         return rowView;
+    }
+
+    private class AsyncVoirDetailsTask extends AsyncTask {
+        private Context mContext;
+        private ProgressDialog dialog;
+        private Date now ;
+        private InfoRencontre r ;
+        private Intent intent;
+        private Sport s;
+        private int dureeMatch;
+        private View v;
+        public AsyncVoirDetailsTask(Context c,int pos,View view) {
+            mContext = c;
+            dialog = new ProgressDialog(c);
+            now = new Date();
+            r = getItem(pos);
+            dureeMatch = 0;
+            v = view;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.setMessage("Récupération des données depuis le serveur...");
+            dialog.show();
+
+
+        }
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+            try {
+                s = httpSportManager.getSportFromRencontre(r.getIdRencontre());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                cancel(true);
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            Toast.makeText(mContext, "Serveur injoignable", Toast.LENGTH_LONG).show();
+
+
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+
+            super.onPostExecute(o);
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            dureeMatch = s.getNbrPeriodes()*s.getTempsPeriode() + 20;
+            Date dateFinMatch = new Date(r.getDateHeure().getTime() + TimeUnit.MINUTES.toMillis(dureeMatch));
+            if(now.after(r.getDateHeure()) && now.before(dateFinMatch) ){
+                intent = new Intent(v.getContext(), DuringMatchActivity.class);
+            }
+            else if(now.after(dateFinMatch)){
+                intent = new Intent(v.getContext(), AfterMatchActivity.class);
+                intent.putExtra("dureeMatch", dureeMatch);
+            }else{
+                intent = new Intent(getContext(), BeforeMatchActivity.class);
+            }
+            intent.putExtra("selectedRencontreId", r.getIdRencontre());
+            getContext().startActivity(intent);
+        }
     }
 
 }

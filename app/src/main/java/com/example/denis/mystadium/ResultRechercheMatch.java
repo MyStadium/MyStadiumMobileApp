@@ -64,6 +64,8 @@ public class ResultRechercheMatch extends ListActivity {
             latitude = Double.parseDouble(savedInstanceState.getString("latitude"));
             longitude = Double.parseDouble(savedInstanceState.getString("longitude"));
         }
+
+
         AsyncListTask async = new AsyncListTask(this);
         async.execute();
 
@@ -104,6 +106,7 @@ public class ResultRechercheMatch extends ListActivity {
                  
                 }
                 cancel(true);
+
              }
             return null;
         }
@@ -128,6 +131,7 @@ public class ResultRechercheMatch extends ListActivity {
                 adaptater = new ResultListAdaptateur(mContext, rencontreList);
                 setListAdapter(adaptater);
             }
+
         }
     }
 
