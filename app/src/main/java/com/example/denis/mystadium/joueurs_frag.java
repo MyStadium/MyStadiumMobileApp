@@ -1,9 +1,12 @@
 package com.example.denis.mystadium;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -16,6 +19,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.denis.mystadium.Model.InfoEquipe;
 import com.example.denis.mystadium.Model.InfoMembre;
 import com.example.denis.mystadium.Request.HttpManagerSuivi;
 import com.example.denis.mystadium.Request.HttpManagerMembre;
@@ -43,27 +47,15 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //instanciate variables
+
         myView = inflater.inflate(R.layout.joueurs, container, false);
         httpSuiviManager = new HttpManagerSuivi();
         httpMembreManager = new HttpManagerMembre();
         playersFollowedListView = (ListView) myView.findViewById(R.id.playersList);
         btnAdd = (Button)myView.findViewById(R.id.btnAdd);
         pref = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-        try{
-            favPlayersList= httpMembreManager.getFollowingPlayersList(pref.getInt("connectedUserId", 0));
-            //adaptater
-            adaptater = new ArrayAdapter<InfoMembre>(this.getContext(), android.R.layout.simple_list_item_1, favPlayersList);
-            playersFollowedListView.setAdapter(adaptater);
-            adaptater.notifyDataSetChanged();
-        }catch(Exception e){
-            Toast.makeText(getContext(), "Impossible de charger la liste de joueur", Toast.LENGTH_LONG).show();
-        }
+        new AsyncListFavTask(this.getActivity().getApplicationContext()).execute();
 
-
-
-
-        //listeners
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,14 +84,7 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
                 .setPositiveButton("Ne plus suivre", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        try{
-                            httpSuiviManager.deleteSuivi(pref.getInt("connectedUserId", 0), favPlayersList.get(pos).getId());
-                            favPlayersList.remove(pos);
-                            adaptater.notifyDataSetChanged();
-                            Toast.makeText(getActivity().getApplicationContext(), "Vous ne suivez plus "+playerLongClickName, Toast.LENGTH_LONG).show();
-                        }catch(Exception e){
-                            Toast.makeText(getContext(), "Erreur lors de la suppresion", Toast.LENGTH_LONG).show();
-                        }
+                        new AsyncDeleteFavTask(getActivity().getApplicationContext()).execute(pos);
                     }
                 });
 
@@ -120,6 +105,110 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
             adaptater = new ArrayAdapter<InfoMembre>(this.getContext(), android.R.layout.simple_list_item_1, favPlayersList);
             playersFollowedListView.setAdapter(adaptater);
             adaptater.notifyDataSetChanged();
+        }
+    }
+
+    private class AsyncListFavTask extends AsyncTask {
+        private Context mContext;
+        private ProgressDialog dialog;
+        public AsyncListFavTask(Context c){
+            mContext = c;
+            dialog = new ProgressDialog(c);
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.setMessage("Récupération des données depuis le serveur...");
+            dialog.show();
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+
+            try {
+                favPlayersList= httpMembreManager.getFollowingPlayersList(pref.getInt("connectedUserId", 0));
+            } catch (Exception e){
+                e.printStackTrace();
+                if(dialog.isShowing()){
+                    dialog.dismiss();
+
+                }
+                cancel(true);
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            Toast.makeText(mContext, "Serveur injoignable", Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            if(dialog.isShowing()){
+                dialog.dismiss();
+            }
+            adaptater = new ArrayAdapter<InfoMembre>(mContext, android.R.layout.simple_list_item_1, favPlayersList);
+            playersFollowedListView.setAdapter(adaptater);
+            adaptater.notifyDataSetChanged();
+
+        }
+    }
+
+    private class AsyncDeleteFavTask extends AsyncTask {
+        private Context mContext;
+        private ProgressDialog dialog;
+        public AsyncDeleteFavTask(Context c){
+            mContext = c;
+            dialog = new ProgressDialog(c);
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.setMessage("Récupération des données depuis le serveur...");
+            dialog.show();
+        }
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            try {
+                httpSuiviManager.deleteSuivi(pref.getInt("connectedUserId", 0), favPlayersList.get((int)params[0]).getId());
+            } catch (Exception e){
+                e.printStackTrace();
+                if(dialog.isShowing()){
+                    dialog.dismiss();
+
+                }
+                cancel(true);
+
+            }
+            return (int)params[0];
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            Toast.makeText(mContext, "Serveur injoignable", Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            if(dialog.isShowing()){
+                dialog.dismiss();
+            }
+            favPlayersList.remove(o);
+            adaptater.notifyDataSetChanged();
+            Toast.makeText(getActivity().getApplicationContext(), "Vous ne suivez plus "+playerLongClickName, Toast.LENGTH_LONG).show();
+
         }
     }
 

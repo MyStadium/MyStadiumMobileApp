@@ -1,9 +1,12 @@
 package com.example.denis.mystadium;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -14,8 +17,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.denis.mystadium.Model.ClassementAdapter;
 import com.example.denis.mystadium.Model.InfoEquipe;
 import com.example.denis.mystadium.Model.InfoMembre;
 import com.example.denis.mystadium.Request.HttpManager;
@@ -45,7 +50,6 @@ public class equipes_frag extends android.support.v4.app.Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         myView = inflater.inflate(R.layout.equipes, container, false);
 
-        //variables instaciation
         pref = PreferenceManager.getDefaultSharedPreferences(getContext());
         btnAddteam = (Button) myView.findViewById(R.id.btnAddTeam);
         listViewTeam = (ListView) myView.findViewById(R.id.teamsList);
@@ -53,16 +57,9 @@ public class equipes_frag extends android.support.v4.app.Fragment{
         httpEquipeManager = new HttpManagerEquipe();
         httpFavorisManager = new HttpManagerFavoris();
 
-        try{
-            listFavEquipe = httpEquipeManager.getFavTeamList(pref.getInt("connectedUserId", 0));
-            adaptater = new ArrayAdapter<InfoEquipe>(this.getContext(), android.R.layout.simple_list_item_1, listFavEquipe);
-            listViewTeam.setAdapter(adaptater);
-            adaptater.notifyDataSetChanged();
-        }catch (Exception e){
-            Toast.makeText(getContext(), "Impossible de charger les équipes favorites", Toast.LENGTH_LONG).show();
-        }
+        new AsyncListFavTask(getActivity().getApplicationContext()).execute();
 
-        //listener
+
         btnAddteam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,18 +107,115 @@ public class equipes_frag extends android.support.v4.app.Fragment{
                 .setPositiveButton("Ne plus suivre", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        try{
-                            httpFavorisManager.deleteFav(pref.getInt("connectedUserId", 0), listFavEquipe.get(pos).getIdEquipe());
-                            listFavEquipe.remove(pos);
-                            adaptater.notifyDataSetChanged();
-                            Toast.makeText(getActivity().getApplicationContext(), "Vous ne suivez plus cette équipe", Toast.LENGTH_LONG).show();
-                        }catch(Exception e){
-                            Toast.makeText(getContext(), "Erreur lors de la suppresion", Toast.LENGTH_LONG).show();
-                        }
+                        new AsyncDeleteFavTask(getActivity().getApplicationContext()).execute(pos);
                     }
                 });
 
         builder.show();
         return true;
+    }
+
+    private class AsyncListFavTask extends AsyncTask {
+        private Context mContext;
+        private ProgressDialog dialog;
+        public AsyncListFavTask(Context c){
+            mContext = c;
+            dialog = new ProgressDialog(c);
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.setMessage("Récupération des données depuis le serveur...");
+            dialog.show();
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+
+            try {
+                listFavEquipe = httpEquipeManager.getFavTeamList(pref.getInt("connectedUserId", 0));
+            } catch (Exception e){
+                e.printStackTrace();
+                if(dialog.isShowing()){
+                    dialog.dismiss();
+
+                }
+                cancel(true);
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            Toast.makeText(mContext, "Serveur injoignable", Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            if(dialog.isShowing()){
+                dialog.dismiss();
+            }
+            adaptater = new ArrayAdapter<InfoEquipe>(mContext, android.R.layout.simple_list_item_1, listFavEquipe);
+            listViewTeam.setAdapter(adaptater);
+            adaptater.notifyDataSetChanged();
+
+        }
+    }
+
+    private class AsyncDeleteFavTask extends AsyncTask {
+        private Context mContext;
+        private ProgressDialog dialog;
+        public AsyncDeleteFavTask(Context c){
+            mContext = c;
+            dialog = new ProgressDialog(c);
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.setMessage("Récupération des données depuis le serveur...");
+            dialog.show();
+        }
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            try {
+                httpFavorisManager.deleteFav(pref.getInt("connectedUserId", 0), listFavEquipe.get((int)params[0]).getIdEquipe());
+            } catch (Exception e){
+                e.printStackTrace();
+                if(dialog.isShowing()){
+                    dialog.dismiss();
+
+                }
+                cancel(true);
+
+            }
+            return (int)params[0];
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            Toast.makeText(mContext, "Serveur injoignable", Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            if(dialog.isShowing()){
+                dialog.dismiss();
+            }
+            listFavEquipe.remove(o);
+            adaptater.notifyDataSetChanged();
+            Toast.makeText(mContext, "Vous ne suivez plus cette équipe", Toast.LENGTH_LONG).show();
+
+        }
     }
 }

@@ -1,7 +1,11 @@
 package com.example.denis.mystadium;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,7 +27,7 @@ public class updateLoginActivity extends AppCompatActivity {
     private SharedPreferences pref;
     private Button btnValidateUpdate;
     private HttpManagerUtilisateur httpUtilisateurManager;
-
+    private SharedActivity shared;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +35,7 @@ public class updateLoginActivity extends AppCompatActivity {
         httpUtilisateurManager = new HttpManagerUtilisateur();
 
         pref  = PreferenceManager.getDefaultSharedPreferences(this);
-
+        shared = new SharedActivity(this);
         txtPrenom = (EditText)findViewById(R.id.editPrenom);
         txtNom = (EditText)findViewById(R.id.editNom);
         txtMail = (EditText)findViewById(R.id.editMail);
@@ -64,25 +68,7 @@ public class updateLoginActivity extends AppCompatActivity {
         String pass = pref.getString("connectedUserPassword", "");
         if(formIsFilled(nom, prenom, mail, login)){
             Utilisateur connectedUser = new Utilisateur(id, nom, prenom, login, pass, mail, nbrBonScore, idRole, pref.getString("connectedUserIdFacebook", ""));
-            try{
-                httpUtilisateurManager.updateUser(connectedUser);
-                SharedPreferences.Editor edit = pref.edit();
-                edit.putInt("connectedUserId", id);
-                edit.putInt("connectedUserIdRole", idRole);
-                edit.putInt("connectedUserNbrBonScore", nbrBonScore);
-                edit.putString("connectedUserName", nom);
-                edit.putString("connectedUserForname", prenom);
-                edit.putString("connectedUserMail", mail);
-                edit.putString("connectedUserLogin",login);
-                edit.putString("connectedUserPassword", pass);
-                edit.commit();
-                onBackPressed();
-            }catch(HttpClientErrorException e){
-                Toast.makeText(this, "L'adresse mail ou le login sont déjà utilisés", Toast.LENGTH_LONG).show();
-            }
-            catch(Exception e){
-                Toast.makeText(this, "Erreur lors de la connexion au serveur", Toast.LENGTH_LONG).show();
-            }
+            new AsyncUpdateTask(this).execute(connectedUser);
         }else{
             Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_LONG).show();
         }
@@ -98,5 +84,69 @@ public class updateLoginActivity extends AppCompatActivity {
             }
         }
         return true;
+    }
+    private class AsyncUpdateTask extends AsyncTask<Utilisateur,Void,Utilisateur> {
+        private Context mContext;
+        private ProgressDialog dialog;
+        private int exception;
+
+        public AsyncUpdateTask(Context c){
+            mContext = c;
+            dialog = new ProgressDialog(c);
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.setMessage("Récupération des données depuis le serveur...");
+            dialog.show();
+        }
+
+        @Override
+        protected Utilisateur doInBackground(Utilisateur[] params) {
+
+            try {
+                httpUtilisateurManager.updateUser(params[0]);
+
+            }catch(HttpClientErrorException e){
+                exception=406;
+                cancel(true);
+            } catch (Exception e){
+                e.printStackTrace();
+                exception = 1;
+                if(dialog.isShowing()){
+                    dialog.dismiss();
+
+                }
+                cancel(true);
+
+            }
+            return params[0];
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            if(exception == 406) {
+                Toast.makeText(mContext, "L'adresse mail ou le login sont déjà utilisés", Toast.LENGTH_LONG).show();
+
+            }else {
+                Toast.makeText(mContext, "Serveur injoignable", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Utilisateur user) {
+            super.onPostExecute(user);
+            if(dialog.isShowing()){
+                dialog.dismiss();
+            }
+            shared = new SharedActivity(mContext);
+            shared.connectUser(user);
+            onBackPressed();
+
+
+        }
     }
 }

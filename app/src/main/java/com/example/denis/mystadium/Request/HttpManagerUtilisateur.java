@@ -59,11 +59,10 @@ public class HttpManagerUtilisateur extends AsyncTask<String, Void, Utilisateur>
     }
     public Utilisateur getUserByIdFacebook (String... params) {
         try {
-            final String url = "http://192.168.128.13:8081/MyStadium-REST-DEVILLE-BRONSART/resources/utilisateur/idFacebook/"+params[0];
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-            Utilisateur user = restTemplate.getForObject(url, Utilisateur.class);
+            HttpManager manager  = new HttpManager();
+            final String url = manager.getRestUrl()+"/utilisateur/idFacebook/"+params[0];
+
+            Utilisateur user = manager.getTemplate().getForObject(url, Utilisateur.class);
             return user;
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,11 +113,9 @@ public class HttpManagerUtilisateur extends AsyncTask<String, Void, Utilisateur>
 
     public Utilisateur tryToConnectUser (String... params) {
         try {
-            final String url = "http://192.168.128.13:8081/MyStadium-REST-DEVILLE-BRONSART/resources/utilisateur/connect/"+params[0]+"/"+params[1];
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-            Utilisateur user = restTemplate.getForObject(url, Utilisateur.class);
+            HttpManager manager = new HttpManager();
+            final String url = manager.getRestUrl()+"/utilisateur/connect/"+params[0]+"/"+params[1];
+            Utilisateur user = manager.getTemplate().getForObject(url, Utilisateur.class);
             return user;
         } catch (Exception e) {
            throw e;

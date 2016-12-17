@@ -1,14 +1,19 @@
 package com.example.denis.mystadium;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.denis.mystadium.Model.InfoEquipe;
 import com.example.denis.mystadium.Model.InfoRencontre;
+import com.example.denis.mystadium.Model.Score;
 import com.example.denis.mystadium.Request.HttpManagerEquipe;
 import com.example.denis.mystadium.Request.HttpManagerRencontre;
 
@@ -88,12 +93,67 @@ public class BeforeMatchActivity extends AppCompatActivity {
             }
         });
 
-        try{
+        new AsyncChargerTask(BeforeMatchActivity.this).execute();
 
-            rencontre = httpRencontreManager.getInfoRencontreById(selectedRencontreId);
-            equipeDomicile = httpEquipeManager.getEquipeById(rencontre.getIdEquipeDomicile());
-            equipeExterieur = httpEquipeManager.getEquipeById(rencontre.getIdEquipeExterieur());
+    }
 
+    public void viewClassement(){
+        Intent intent = new Intent(this, ClassementActivity.class);
+        intent.putExtra("idChampionnat", rencontre.getIdChampionnat());
+        intent.putExtra("libelleChampionnat", equipeDomicile.getCategorieAge() +" "+rencontre.getLibelleChampionnat());
+        startActivity(intent);
+    }
+    private class AsyncChargerTask extends AsyncTask {
+        private Context mContext;
+        private ProgressDialog dialog;
+        public AsyncChargerTask(Context c) {
+            mContext = c;
+            dialog = new ProgressDialog(c);
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.setMessage("Récupération des données depuis le serveur...");
+            dialog.show();
+
+
+        }
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+            try {
+                rencontre = httpRencontreManager.getInfoRencontreById(selectedRencontreId);
+                equipeDomicile = httpEquipeManager.getEquipeById(rencontre.getIdEquipeDomicile());
+                equipeExterieur = httpEquipeManager.getEquipeById(rencontre.getIdEquipeExterieur());
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                cancel(true);
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            Toast.makeText(mContext, "Serveur injoignable", Toast.LENGTH_LONG).show();
+
+
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+
+            super.onPostExecute(o);
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
             SimpleDateFormat format = new SimpleDateFormat("EE dd/MM/yyyy HH:mm");
             String dateHeure = format.format(rencontre.getDateHeure());
             txtNomDomicile.setText(rencontre.getNomEquipeDomicile());
@@ -113,16 +173,7 @@ public class BeforeMatchActivity extends AppCompatActivity {
             txtCategorie.setText(equipeDomicile.getCategorieAge()+" "+ rencontre.getLibelleChampionnat());
             txtNomStade.setText(rencontre.getNomStade());
             txtAdresseStade.setText(rencontre.getNumero() +" " +rencontre.getRue() +", " +rencontre.getLocalite());
-        }catch(Exception e){
 
         }
-
-    }
-
-    public void viewClassement(){
-        Intent intent = new Intent(this, ClassementActivity.class);
-        intent.putExtra("idChampionnat", rencontre.getIdChampionnat());
-        intent.putExtra("libelleChampionnat", equipeDomicile.getCategorieAge() +" "+rencontre.getLibelleChampionnat());
-        startActivity(intent);
     }
 }
