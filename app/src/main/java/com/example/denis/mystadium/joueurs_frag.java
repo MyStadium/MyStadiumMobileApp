@@ -54,7 +54,7 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
         playersFollowedListView = (ListView) myView.findViewById(R.id.playersList);
         btnAdd = (Button)myView.findViewById(R.id.btnAdd);
         pref = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-        new AsyncListFavTask(this.getActivity().getApplicationContext()).execute();
+        new AsyncListFavTask(getActivity()).execute();
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +84,7 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
                 .setPositiveButton("Ne plus suivre", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        new AsyncDeleteFavTask(getActivity().getApplicationContext()).execute(pos);
+                        new AsyncDeleteFavTask(getActivity()).execute(pos);
                     }
                 });
 

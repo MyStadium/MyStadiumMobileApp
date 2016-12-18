@@ -57,7 +57,7 @@ public class equipes_frag extends android.support.v4.app.Fragment{
         httpEquipeManager = new HttpManagerEquipe();
         httpFavorisManager = new HttpManagerFavoris();
 
-        new AsyncListFavTask(getActivity().getApplicationContext()).execute();
+        new AsyncListFavTask(getActivity()).execute();
 
 
         btnAddteam.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +107,7 @@ public class equipes_frag extends android.support.v4.app.Fragment{
                 .setPositiveButton("Ne plus suivre", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        new AsyncDeleteFavTask(getActivity().getApplicationContext()).execute(pos);
+                        new AsyncDeleteFavTask(getActivity()).execute(pos);
                     }
                 });
 
