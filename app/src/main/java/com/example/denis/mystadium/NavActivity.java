@@ -146,14 +146,14 @@ public class NavActivity extends AppCompatActivity
                 myFrag = new equipes_frag();
             }else{
                 myFrag = new connection_frag();
-                Toast.makeText(getApplicationContext(), "Vous devez être connecté pour afficher votre profil", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Vous devez être connecté pour afficher vos équipes", Toast.LENGTH_LONG).show();
             }
         } else if (id == R.id.nav_jou) {
             if(connected){
                 myFrag = new joueurs_frag();
             }else{
                 myFrag = new connection_frag();
-                Toast.makeText(getApplicationContext(), "Vous devez être connecté pour afficher votre profil", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Vous devez être connecté pour afficher vos joueurs", Toast.LENGTH_LONG).show();
             }
         }
 
