@@ -209,7 +209,7 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
             if(dialog.isShowing()){
                 dialog.dismiss();
             }
-            favPlayersList.remove(o);
+            favPlayersList.remove((int)o);
             adaptater.notifyDataSetChanged();
             Toast.makeText(getActivity().getApplicationContext(), "Vous ne suivez plus "+playerLongClickName, Toast.LENGTH_LONG).show();
 
