@@ -212,7 +212,7 @@ public class equipes_frag extends android.support.v4.app.Fragment{
             if(dialog.isShowing()){
                 dialog.dismiss();
             }
-            listFavEquipe.remove(o);
+            listFavEquipe.remove((int)o);
             adaptater.notifyDataSetChanged();
             Toast.makeText(mContext, "Vous ne suivez plus cette équipe", Toast.LENGTH_LONG).show();
 

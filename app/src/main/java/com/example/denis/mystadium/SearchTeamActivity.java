@@ -110,7 +110,11 @@ public class SearchTeamActivity extends AppCompatActivity {
 
         inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                 InputMethodManager.HIDE_NOT_ALWAYS);
-        new AsyncRechercheTask(this).execute();
+        if(txtSearch.getText().toString().length() == 0) {
+            Toast.makeText(this, "Le champs de recherche est vide", Toast.LENGTH_LONG).show();
+        }else {
+            new AsyncRechercheTask(this).execute();
+        }
 
     }
 
@@ -223,7 +227,7 @@ public class SearchTeamActivity extends AppCompatActivity {
                 httpFavorisManager.postFavoris((Favoris)objects[0]);
             }catch(HttpClientErrorException eh){
                 exception = 406;
-
+                cancel(true);
             } catch (Exception e){
                 e.printStackTrace();
                 exception=1;
