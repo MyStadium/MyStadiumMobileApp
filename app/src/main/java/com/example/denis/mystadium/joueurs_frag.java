@@ -54,7 +54,7 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
         playersFollowedListView = (ListView) myView.findViewById(R.id.playersList);
         btnAdd = (Button)myView.findViewById(R.id.btnAdd);
         pref = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-        new AsyncListFavTask(getActivity()).execute();
+        new AsyncListFavTask(getActivity(),this.getContext()).execute();
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,9 +111,11 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
     private class AsyncListFavTask extends AsyncTask {
         private Context mContext;
         private ProgressDialog dialog;
-        public AsyncListFavTask(Context c){
+        private Context adaptateurContext;
+        public AsyncListFavTask(Context c, Context m){
             mContext = c;
             dialog = new ProgressDialog(c);
+            adaptateurContext = m;
         }
 
 
@@ -153,7 +155,7 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
             if(dialog.isShowing()){
                 dialog.dismiss();
             }
-            adaptater = new ArrayAdapter<InfoMembre>(mContext, android.R.layout.simple_list_item_1, favPlayersList);
+            adaptater = new ArrayAdapter<InfoMembre>(adaptateurContext, android.R.layout.simple_list_item_1, favPlayersList);
             playersFollowedListView.setAdapter(adaptater);
             adaptater.notifyDataSetChanged();
 
@@ -162,10 +164,12 @@ public class joueurs_frag extends android.support.v4.app.Fragment{
 
     private class AsyncDeleteFavTask extends AsyncTask {
         private Context mContext;
+
         private ProgressDialog dialog;
         public AsyncDeleteFavTask(Context c){
             mContext = c;
             dialog = new ProgressDialog(c);
+
         }
 
 

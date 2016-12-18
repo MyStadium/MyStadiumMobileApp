@@ -221,7 +221,7 @@ public class SearchMembreActivity extends AppCompatActivity {
                 httpManager.postRequestSuivi("suivre", (Suivre) objects[0]);
             }catch(HttpClientErrorException eh){
                 exception = 406;
-
+                cancel(true);
             } catch (Exception e){
                 e.printStackTrace();
                 exception=1;

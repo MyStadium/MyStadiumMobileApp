@@ -223,7 +223,7 @@ public class SearchTeamActivity extends AppCompatActivity {
                 httpFavorisManager.postFavoris((Favoris)objects[0]);
             }catch(HttpClientErrorException eh){
                 exception = 406;
-
+                cancel(true);
             } catch (Exception e){
                 e.printStackTrace();
                 exception=1;
