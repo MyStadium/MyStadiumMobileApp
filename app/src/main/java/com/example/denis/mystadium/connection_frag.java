@@ -238,8 +238,10 @@ public class connection_frag extends android.support.v4.app.Fragment{
                 Profile profile = Profile.getCurrentProfile();
                 idFacebook = profile.getId();
                 user = requestUser.getUserByIdFacebook(idFacebook);
-                r = roleManager.getRole(user.getIdRole());
-                shared.putUserRole(r.getLibelle());
+                if(user != null) {
+                    r = roleManager.getRole(user.getIdRole());
+                    shared.putUserRole(r.getLibelle());
+                }
             } catch (Exception e){
                 e.printStackTrace();
                 if(dialog.isShowing()){

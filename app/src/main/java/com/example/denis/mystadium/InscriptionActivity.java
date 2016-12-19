@@ -42,7 +42,7 @@ public class InscriptionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_inscription);
 
 
-
+        shared = new SharedActivity(this);
         txtNom = (EditText)findViewById(R.id.editInscriptionNom);
         txtPrenom = (EditText)findViewById(R.id.editInscriptionPrenom);
         txtMail = (EditText)findViewById(R.id.editInscriptionMail);
