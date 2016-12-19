@@ -49,7 +49,7 @@ public class ClassementActivity extends AppCompatActivity {
             libelleChampionnat = savedInstanceState.getString("libelleChampionnat");
         }
 
-        new AsyncClassementTask(getApplicationContext()).execute();
+        new AsyncClassementTask(ClassementActivity.this).execute();
 
 
 
